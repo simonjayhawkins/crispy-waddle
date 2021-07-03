@@ -1,0 +1,9 @@
+{
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) CPU E5-2687W v3 @ 3.10GHz",
+    "machine": "T5810",
+    "num_cpu": "10",
+    "os": "Linux 5.4.72-microsoft-standard-WSL2",
+    "ram": "64GB",
+    "version": 1
+}
