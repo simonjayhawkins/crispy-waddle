@@ -38,7 +38,7 @@
         "warmup_time": -1
     },
     "algorithms.Factorize.time_factorize": {
-        "code": "class Factorize:\n    def time_factorize(self, unique, sort, dtype):\n        pd.factorize(self.data, sort=sort)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Factorize:\n    def setup(self, unique, sort, dtype):\n        N = 10 ** 5\n        string_index = tm.makeStringIndex(N)\n        try:\n            from pandas.core.arrays.string_arrow import ArrowStringDtype\n    \n            string_arrow = pd.array(string_index, dtype=ArrowStringDtype())\n        except ImportError:\n            string_arrow = None\n    \n        if dtype == \"string_arrow\" and not string_arrow:\n            raise NotImplementedError\n    \n        data = {\n            \"int\": pd.Int64Index(np.arange(N)),\n            \"uint\": pd.UInt64Index(np.arange(N)),\n            \"float\": pd.Float64Index(np.random.randn(N)),\n            \"string\": string_index,\n            \"datetime64[ns]\": pd.date_range(\"2011-01-01\", freq=\"H\", periods=N),\n            \"datetime64[ns, tz]\": pd.date_range(\n                \"2011-01-01\", freq=\"H\", periods=N, tz=\"Asia/Tokyo\"\n            ),\n            \"Int64\": pd.array(np.arange(N), dtype=\"Int64\"),\n            \"boolean\": pd.array(np.random.randint(0, 2, N), dtype=\"boolean\"),\n            \"string_arrow\": string_arrow,\n        }[dtype]\n        if not unique:\n            data = data.repeat(5)\n        self.data = data",
+        "code": "class Factorize:\n    def time_factorize(self, unique, sort, dtype):\n        pd.factorize(self.data, sort=sort)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Factorize:\n    def setup(self, unique, sort, dtype):\n        N = 10 ** 5\n        string_index = tm.makeStringIndex(N)\n        string_arrow = None\n        if dtype == \"string[pyarrow]\":\n            try:\n                string_arrow = pd.array(string_index, dtype=\"string[pyarrow]\")\n            except ImportError:\n                raise NotImplementedError\n    \n        data = {\n            \"int\": pd.Int64Index(np.arange(N)),\n            \"uint\": pd.UInt64Index(np.arange(N)),\n            \"float\": pd.Float64Index(np.random.randn(N)),\n            \"object\": string_index,\n            \"datetime64[ns]\": pd.date_range(\"2011-01-01\", freq=\"H\", periods=N),\n            \"datetime64[ns, tz]\": pd.date_range(\n                \"2011-01-01\", freq=\"H\", periods=N, tz=\"Asia/Tokyo\"\n            ),\n            \"Int64\": pd.array(np.arange(N), dtype=\"Int64\"),\n            \"boolean\": pd.array(np.random.randint(0, 2, N), dtype=\"boolean\"),\n            \"string[pyarrow]\": string_arrow,\n        }[dtype]\n        if not unique:\n            data = data.repeat(5)\n        self.data = data",
         "min_run_count": 2,
         "name": "algorithms.Factorize.time_factorize",
         "number": 0,
@@ -60,12 +60,12 @@
                 "'int'",
                 "'uint'",
                 "'float'",
-                "'string'",
+                "'object'",
                 "'datetime64[ns]'",
                 "'datetime64[ns, tz]'",
                 "'Int64'",
                 "'boolean'",
-                "'string_arrow'"
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -74,7 +74,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "29136f2c77b9d4965d7db270b3b3fa714fa257567c99379afc4b656ec0595e33",
+        "version": "3fff787ddf77bbdbf468194d90cc2429e69a6889657463035f50901ef8f28e51",
         "warmup_time": -1
     },
     "algorithms.Hashing.time_frame": {
@@ -87,7 +87,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "algorithms:102",
+        "setup_cache_key": "algorithms:99",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -104,7 +104,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "algorithms:102",
+        "setup_cache_key": "algorithms:99",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -121,7 +121,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "algorithms:102",
+        "setup_cache_key": "algorithms:99",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -138,7 +138,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "algorithms:102",
+        "setup_cache_key": "algorithms:99",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -155,7 +155,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "algorithms:102",
+        "setup_cache_key": "algorithms:99",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -172,7 +172,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "algorithms:102",
+        "setup_cache_key": "algorithms:99",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -189,7 +189,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "algorithms:102",
+        "setup_cache_key": "algorithms:99",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -258,7 +258,7 @@
         "warmup_time": -1
     },
     "algos.isin.IsIn.time_isin": {
-        "code": "class IsIn:\n    def time_isin(self, dtype):\n        self.series.isin(self.values)\n\n    def setup(self, dtype):\n        N = 10000\n    \n        self.mismatched = [NaT.to_datetime64()] * 2\n    \n        if dtype in [\"boolean\", \"bool\"]:\n            self.series = Series(np.random.randint(0, 2, N)).astype(dtype)\n            self.values = [True, False]\n    \n        elif dtype == \"datetime64[ns]\":\n            # Note: values here is much larger than non-dt64ns cases\n    \n            # dti has length=115777\n            dti = date_range(start=\"2015-10-26\", end=\"2016-01-01\", freq=\"50s\")\n            self.series = Series(dti)\n            self.values = self.series._values[::3]\n            self.mismatched = [1, 2]\n    \n        elif dtype in [\"category[object]\", \"category[int]\"]:\n            # Note: sizes are different in this case than others\n            np.random.seed(1234)\n    \n            n = 5 * 10 ** 5\n            sample_size = 100\n    \n            arr = list(np.random.randint(0, n // 10, size=n))\n            if dtype == \"category[object]\":\n                arr = [f\"s{i:04d}\" for i in arr]\n    \n            self.values = np.random.choice(arr, sample_size)\n            self.series = Series(arr).astype(\"category\")\n    \n        elif dtype in [\"str\", \"string\", \"arrow_string\"]:\n            from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n            try:\n                self.series = Series(tm.makeStringIndex(N), dtype=dtype)\n            except ImportError:\n                raise NotImplementedError\n            self.values = list(self.series[:2])\n    \n        else:\n            self.series = Series(np.random.randint(1, 10, N)).astype(dtype)\n            self.values = [1, 2]\n    \n        self.cat_values = Categorical(self.values)",
+        "code": "class IsIn:\n    def time_isin(self, dtype):\n        self.series.isin(self.values)\n\n    def setup(self, dtype):\n        N = 10000\n    \n        self.mismatched = [NaT.to_datetime64()] * 2\n    \n        if dtype in [\"boolean\", \"bool\"]:\n            self.series = Series(np.random.randint(0, 2, N)).astype(dtype)\n            self.values = [True, False]\n    \n        elif dtype == \"datetime64[ns]\":\n            # Note: values here is much larger than non-dt64ns cases\n    \n            # dti has length=115777\n            dti = date_range(start=\"2015-10-26\", end=\"2016-01-01\", freq=\"50s\")\n            self.series = Series(dti)\n            self.values = self.series._values[::3]\n            self.mismatched = [1, 2]\n    \n        elif dtype in [\"category[object]\", \"category[int]\"]:\n            # Note: sizes are different in this case than others\n            n = 5 * 10 ** 5\n            sample_size = 100\n    \n            arr = list(np.random.randint(0, n // 10, size=n))\n            if dtype == \"category[object]\":\n                arr = [f\"s{i:04d}\" for i in arr]\n    \n            self.values = np.random.choice(arr, sample_size)\n            self.series = Series(arr).astype(\"category\")\n    \n        elif dtype in [\"str\", \"string[python]\", \"string[pyarrow]\"]:\n            try:\n                self.series = Series(tm.makeStringIndex(N), dtype=dtype)\n            except ImportError:\n                raise NotImplementedError\n            self.values = list(self.series[:2])\n    \n        else:\n            self.series = Series(np.random.randint(1, 10, N)).astype(dtype)\n            self.values = [1, 2]\n    \n        self.cat_values = Categorical(self.values)",
         "min_run_count": 2,
         "name": "algos.isin.IsIn.time_isin",
         "number": 0,
@@ -277,8 +277,8 @@
                 "'category[object]'",
                 "'category[int]'",
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -287,11 +287,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "d4e20f1d997ef44afc8b1f2301eb07f4980872d659926bca34ce72af359a8044",
+        "version": "bf52d16638fbfbf16906754075f99c3db94b057ef9f8bad429137499c1f8c1a4",
         "warmup_time": -1
     },
     "algos.isin.IsIn.time_isin_categorical": {
-        "code": "class IsIn:\n    def time_isin_categorical(self, dtype):\n        self.series.isin(self.cat_values)\n\n    def setup(self, dtype):\n        N = 10000\n    \n        self.mismatched = [NaT.to_datetime64()] * 2\n    \n        if dtype in [\"boolean\", \"bool\"]:\n            self.series = Series(np.random.randint(0, 2, N)).astype(dtype)\n            self.values = [True, False]\n    \n        elif dtype == \"datetime64[ns]\":\n            # Note: values here is much larger than non-dt64ns cases\n    \n            # dti has length=115777\n            dti = date_range(start=\"2015-10-26\", end=\"2016-01-01\", freq=\"50s\")\n            self.series = Series(dti)\n            self.values = self.series._values[::3]\n            self.mismatched = [1, 2]\n    \n        elif dtype in [\"category[object]\", \"category[int]\"]:\n            # Note: sizes are different in this case than others\n            np.random.seed(1234)\n    \n            n = 5 * 10 ** 5\n            sample_size = 100\n    \n            arr = list(np.random.randint(0, n // 10, size=n))\n            if dtype == \"category[object]\":\n                arr = [f\"s{i:04d}\" for i in arr]\n    \n            self.values = np.random.choice(arr, sample_size)\n            self.series = Series(arr).astype(\"category\")\n    \n        elif dtype in [\"str\", \"string\", \"arrow_string\"]:\n            from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n            try:\n                self.series = Series(tm.makeStringIndex(N), dtype=dtype)\n            except ImportError:\n                raise NotImplementedError\n            self.values = list(self.series[:2])\n    \n        else:\n            self.series = Series(np.random.randint(1, 10, N)).astype(dtype)\n            self.values = [1, 2]\n    \n        self.cat_values = Categorical(self.values)",
+        "code": "class IsIn:\n    def time_isin_categorical(self, dtype):\n        self.series.isin(self.cat_values)\n\n    def setup(self, dtype):\n        N = 10000\n    \n        self.mismatched = [NaT.to_datetime64()] * 2\n    \n        if dtype in [\"boolean\", \"bool\"]:\n            self.series = Series(np.random.randint(0, 2, N)).astype(dtype)\n            self.values = [True, False]\n    \n        elif dtype == \"datetime64[ns]\":\n            # Note: values here is much larger than non-dt64ns cases\n    \n            # dti has length=115777\n            dti = date_range(start=\"2015-10-26\", end=\"2016-01-01\", freq=\"50s\")\n            self.series = Series(dti)\n            self.values = self.series._values[::3]\n            self.mismatched = [1, 2]\n    \n        elif dtype in [\"category[object]\", \"category[int]\"]:\n            # Note: sizes are different in this case than others\n            n = 5 * 10 ** 5\n            sample_size = 100\n    \n            arr = list(np.random.randint(0, n // 10, size=n))\n            if dtype == \"category[object]\":\n                arr = [f\"s{i:04d}\" for i in arr]\n    \n            self.values = np.random.choice(arr, sample_size)\n            self.series = Series(arr).astype(\"category\")\n    \n        elif dtype in [\"str\", \"string[python]\", \"string[pyarrow]\"]:\n            try:\n                self.series = Series(tm.makeStringIndex(N), dtype=dtype)\n            except ImportError:\n                raise NotImplementedError\n            self.values = list(self.series[:2])\n    \n        else:\n            self.series = Series(np.random.randint(1, 10, N)).astype(dtype)\n            self.values = [1, 2]\n    \n        self.cat_values = Categorical(self.values)",
         "min_run_count": 2,
         "name": "algos.isin.IsIn.time_isin_categorical",
         "number": 0,
@@ -310,8 +310,8 @@
                 "'category[object]'",
                 "'category[int]'",
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -320,11 +320,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "973cc5b872cbf8179486e0d9a38f315a72180cc87c9a765a7a22b279136b990c",
+        "version": "fb4ed856d40cc48b2aeed8b75e416fc3967dc4e6b1e343e2a23f1819de15e238",
         "warmup_time": -1
     },
     "algos.isin.IsIn.time_isin_empty": {
-        "code": "class IsIn:\n    def time_isin_empty(self, dtype):\n        self.series.isin([])\n\n    def setup(self, dtype):\n        N = 10000\n    \n        self.mismatched = [NaT.to_datetime64()] * 2\n    \n        if dtype in [\"boolean\", \"bool\"]:\n            self.series = Series(np.random.randint(0, 2, N)).astype(dtype)\n            self.values = [True, False]\n    \n        elif dtype == \"datetime64[ns]\":\n            # Note: values here is much larger than non-dt64ns cases\n    \n            # dti has length=115777\n            dti = date_range(start=\"2015-10-26\", end=\"2016-01-01\", freq=\"50s\")\n            self.series = Series(dti)\n            self.values = self.series._values[::3]\n            self.mismatched = [1, 2]\n    \n        elif dtype in [\"category[object]\", \"category[int]\"]:\n            # Note: sizes are different in this case than others\n            np.random.seed(1234)\n    \n            n = 5 * 10 ** 5\n            sample_size = 100\n    \n            arr = list(np.random.randint(0, n // 10, size=n))\n            if dtype == \"category[object]\":\n                arr = [f\"s{i:04d}\" for i in arr]\n    \n            self.values = np.random.choice(arr, sample_size)\n            self.series = Series(arr).astype(\"category\")\n    \n        elif dtype in [\"str\", \"string\", \"arrow_string\"]:\n            from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n            try:\n                self.series = Series(tm.makeStringIndex(N), dtype=dtype)\n            except ImportError:\n                raise NotImplementedError\n            self.values = list(self.series[:2])\n    \n        else:\n            self.series = Series(np.random.randint(1, 10, N)).astype(dtype)\n            self.values = [1, 2]\n    \n        self.cat_values = Categorical(self.values)",
+        "code": "class IsIn:\n    def time_isin_empty(self, dtype):\n        self.series.isin([])\n\n    def setup(self, dtype):\n        N = 10000\n    \n        self.mismatched = [NaT.to_datetime64()] * 2\n    \n        if dtype in [\"boolean\", \"bool\"]:\n            self.series = Series(np.random.randint(0, 2, N)).astype(dtype)\n            self.values = [True, False]\n    \n        elif dtype == \"datetime64[ns]\":\n            # Note: values here is much larger than non-dt64ns cases\n    \n            # dti has length=115777\n            dti = date_range(start=\"2015-10-26\", end=\"2016-01-01\", freq=\"50s\")\n            self.series = Series(dti)\n            self.values = self.series._values[::3]\n            self.mismatched = [1, 2]\n    \n        elif dtype in [\"category[object]\", \"category[int]\"]:\n            # Note: sizes are different in this case than others\n            n = 5 * 10 ** 5\n            sample_size = 100\n    \n            arr = list(np.random.randint(0, n // 10, size=n))\n            if dtype == \"category[object]\":\n                arr = [f\"s{i:04d}\" for i in arr]\n    \n            self.values = np.random.choice(arr, sample_size)\n            self.series = Series(arr).astype(\"category\")\n    \n        elif dtype in [\"str\", \"string[python]\", \"string[pyarrow]\"]:\n            try:\n                self.series = Series(tm.makeStringIndex(N), dtype=dtype)\n            except ImportError:\n                raise NotImplementedError\n            self.values = list(self.series[:2])\n    \n        else:\n            self.series = Series(np.random.randint(1, 10, N)).astype(dtype)\n            self.values = [1, 2]\n    \n        self.cat_values = Categorical(self.values)",
         "min_run_count": 2,
         "name": "algos.isin.IsIn.time_isin_empty",
         "number": 0,
@@ -343,8 +343,8 @@
                 "'category[object]'",
                 "'category[int]'",
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -353,11 +353,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "33b3d9c93fb7f9b7045f10ead1d327ec758d406f893c219363d6cca2910b4828",
+        "version": "7a5bb309464b34a368d60f06e05c4fa73793464388a1ee251eff75835197dcc3",
         "warmup_time": -1
     },
     "algos.isin.IsIn.time_isin_mismatched_dtype": {
-        "code": "class IsIn:\n    def time_isin_mismatched_dtype(self, dtype):\n        self.series.isin(self.mismatched)\n\n    def setup(self, dtype):\n        N = 10000\n    \n        self.mismatched = [NaT.to_datetime64()] * 2\n    \n        if dtype in [\"boolean\", \"bool\"]:\n            self.series = Series(np.random.randint(0, 2, N)).astype(dtype)\n            self.values = [True, False]\n    \n        elif dtype == \"datetime64[ns]\":\n            # Note: values here is much larger than non-dt64ns cases\n    \n            # dti has length=115777\n            dti = date_range(start=\"2015-10-26\", end=\"2016-01-01\", freq=\"50s\")\n            self.series = Series(dti)\n            self.values = self.series._values[::3]\n            self.mismatched = [1, 2]\n    \n        elif dtype in [\"category[object]\", \"category[int]\"]:\n            # Note: sizes are different in this case than others\n            np.random.seed(1234)\n    \n            n = 5 * 10 ** 5\n            sample_size = 100\n    \n            arr = list(np.random.randint(0, n // 10, size=n))\n            if dtype == \"category[object]\":\n                arr = [f\"s{i:04d}\" for i in arr]\n    \n            self.values = np.random.choice(arr, sample_size)\n            self.series = Series(arr).astype(\"category\")\n    \n        elif dtype in [\"str\", \"string\", \"arrow_string\"]:\n            from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n            try:\n                self.series = Series(tm.makeStringIndex(N), dtype=dtype)\n            except ImportError:\n                raise NotImplementedError\n            self.values = list(self.series[:2])\n    \n        else:\n            self.series = Series(np.random.randint(1, 10, N)).astype(dtype)\n            self.values = [1, 2]\n    \n        self.cat_values = Categorical(self.values)",
+        "code": "class IsIn:\n    def time_isin_mismatched_dtype(self, dtype):\n        self.series.isin(self.mismatched)\n\n    def setup(self, dtype):\n        N = 10000\n    \n        self.mismatched = [NaT.to_datetime64()] * 2\n    \n        if dtype in [\"boolean\", \"bool\"]:\n            self.series = Series(np.random.randint(0, 2, N)).astype(dtype)\n            self.values = [True, False]\n    \n        elif dtype == \"datetime64[ns]\":\n            # Note: values here is much larger than non-dt64ns cases\n    \n            # dti has length=115777\n            dti = date_range(start=\"2015-10-26\", end=\"2016-01-01\", freq=\"50s\")\n            self.series = Series(dti)\n            self.values = self.series._values[::3]\n            self.mismatched = [1, 2]\n    \n        elif dtype in [\"category[object]\", \"category[int]\"]:\n            # Note: sizes are different in this case than others\n            n = 5 * 10 ** 5\n            sample_size = 100\n    \n            arr = list(np.random.randint(0, n // 10, size=n))\n            if dtype == \"category[object]\":\n                arr = [f\"s{i:04d}\" for i in arr]\n    \n            self.values = np.random.choice(arr, sample_size)\n            self.series = Series(arr).astype(\"category\")\n    \n        elif dtype in [\"str\", \"string[python]\", \"string[pyarrow]\"]:\n            try:\n                self.series = Series(tm.makeStringIndex(N), dtype=dtype)\n            except ImportError:\n                raise NotImplementedError\n            self.values = list(self.series[:2])\n    \n        else:\n            self.series = Series(np.random.randint(1, 10, N)).astype(dtype)\n            self.values = [1, 2]\n    \n        self.cat_values = Categorical(self.values)",
         "min_run_count": 2,
         "name": "algos.isin.IsIn.time_isin_mismatched_dtype",
         "number": 0,
@@ -376,8 +376,8 @@
                 "'category[object]'",
                 "'category[int]'",
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -386,7 +386,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "71338e625f83db1113b5a6a17f3c54b6c2319468840b3e097fad61da5c363062",
+        "version": "b7177867a1e2c283a20e77657f24533a1312d41cee4401d52f15054c078bdbe7",
         "warmup_time": -1
     },
     "algos.isin.IsInFloat64.time_isin": {
@@ -451,7 +451,7 @@
         "warmup_time": -1
     },
     "algos.isin.IsInLongSeriesLookUpDominates.time_isin": {
-        "code": "class IsInLongSeriesLookUpDominates:\n    def time_isin(self, dtypes, MaxNumber, series_type):\n        self.series.isin(self.values)\n\n    def setup(self, dtype, MaxNumber, series_type):\n        N = 10 ** 7\n    \n        # https://github.com/pandas-dev/pandas/issues/39844\n        if not np_version_under1p20 and dtype in (\"Int64\", \"Float64\"):\n            raise NotImplementedError\n    \n        if series_type == \"random_hits\":\n            np.random.seed(42)\n            array = np.random.randint(0, MaxNumber, N)\n        if series_type == \"random_misses\":\n            np.random.seed(42)\n            array = np.random.randint(0, MaxNumber, N) + MaxNumber\n        if series_type == \"monotone_hits\":\n            array = np.repeat(np.arange(MaxNumber), N // MaxNumber)\n        if series_type == \"monotone_misses\":\n            array = np.arange(N) + MaxNumber\n    \n        self.series = Series(array).astype(dtype)\n        self.values = np.arange(MaxNumber).astype(dtype)",
+        "code": "class IsInLongSeriesLookUpDominates:\n    def time_isin(self, dtypes, MaxNumber, series_type):\n        self.series.isin(self.values)\n\n    def setup(self, dtype, MaxNumber, series_type):\n        N = 10 ** 7\n    \n        # https://github.com/pandas-dev/pandas/issues/39844\n        if not np_version_under1p20 and dtype in (\"Int64\", \"Float64\"):\n            raise NotImplementedError\n    \n        if series_type == \"random_hits\":\n            array = np.random.randint(0, MaxNumber, N)\n        if series_type == \"random_misses\":\n            array = np.random.randint(0, MaxNumber, N) + MaxNumber\n        if series_type == \"monotone_hits\":\n            array = np.repeat(np.arange(MaxNumber), N // MaxNumber)\n        if series_type == \"monotone_misses\":\n            array = np.arange(N) + MaxNumber\n    \n        self.series = Series(array).astype(dtype)\n        self.values = np.arange(MaxNumber).astype(dtype)",
         "min_run_count": 2,
         "name": "algos.isin.IsInLongSeriesLookUpDominates.time_isin",
         "number": 0,
@@ -487,11 +487,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "c90236d1d69ea0ca21b62fc51abdf55c7c953729c9cfd0405c91c32b1698b246",
+        "version": "96414a3a6f71ef49b0c7eaceda263da02ea176afd4e94706f50c0cfebb9ac95a",
         "warmup_time": -1
     },
     "algos.isin.IsInLongSeriesValuesDominate.time_isin": {
-        "code": "class IsInLongSeriesValuesDominate:\n    def time_isin(self, dtypes, series_type):\n        self.series.isin(self.values)\n\n    def setup(self, dtype, series_type):\n        N = 10 ** 7\n    \n        # https://github.com/pandas-dev/pandas/issues/39844\n        if not np_version_under1p20 and dtype in (\"Int64\", \"Float64\"):\n            raise NotImplementedError\n    \n        if series_type == \"random\":\n            np.random.seed(42)\n            vals = np.random.randint(0, 10 * N, N)\n        if series_type == \"monotone\":\n            vals = np.arange(N)\n    \n        self.values = vals.astype(dtype)\n        M = 10 ** 6 + 1\n        self.series = Series(np.arange(M)).astype(dtype)",
+        "code": "class IsInLongSeriesValuesDominate:\n    def time_isin(self, dtypes, series_type):\n        self.series.isin(self.values)\n\n    def setup(self, dtype, series_type):\n        N = 10 ** 7\n    \n        # https://github.com/pandas-dev/pandas/issues/39844\n        if not np_version_under1p20 and dtype in (\"Int64\", \"Float64\"):\n            raise NotImplementedError\n    \n        if series_type == \"random\":\n            vals = np.random.randint(0, 10 * N, N)\n        if series_type == \"monotone\":\n            vals = np.arange(N)\n    \n        self.values = vals.astype(dtype)\n        M = 10 ** 6 + 1\n        self.series = Series(np.arange(M)).astype(dtype)",
         "min_run_count": 2,
         "name": "algos.isin.IsInLongSeriesValuesDominate.time_isin",
         "number": 0,
@@ -520,11 +520,27 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "9efc8b66272827ca351137493149a1111f1d26b61a5d0fcaad3a623ad96a2db4",
+        "version": "56c22c67d47f15895ae0f3485d322d5af0583763800f868b8e43795686b323f3",
+        "warmup_time": -1
+    },
+    "algos.isin.IsInWithLongTupples.time_isin": {
+        "code": "class IsInWithLongTupples:\n    def time_isin(self):\n        self.series.isin(self.values)\n\n    def setup(self):\n        t = tuple(range(1000))\n        self.series = Series([t] * 1000)\n        self.values = [t]",
+        "min_run_count": 2,
+        "name": "algos.isin.IsInWithLongTupples.time_isin",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "55c634e065a928f8f1e9146932290a0b894f6f9f6f25b0d57ab2597ce60972ad",
         "warmup_time": -1
     },
     "algos.isin.IsinAlmostFullWithRandomInt.time_isin": {
-        "code": "class IsinAlmostFullWithRandomInt:\n    def time_isin(self, dtype, exponent, title):\n        self.series.isin(self.values)\n\n    def setup(self, dtype, exponent, title):\n        M = 3 * 2 ** (exponent - 2)\n        # 0.77-the maximal share of occupied buckets\n        np.random.seed(42)\n        self.series = Series(np.random.randint(0, M, M)).astype(dtype)\n    \n        values = np.random.randint(0, M, M).astype(dtype)\n        if title == \"inside\":\n            self.values = values\n        elif title == \"outside\":\n            self.values = values + M\n        else:\n            raise ValueError(title)",
+        "code": "class IsinAlmostFullWithRandomInt:\n    def time_isin(self, dtype, exponent, title):\n        self.series.isin(self.values)\n\n    def setup(self, dtype, exponent, title):\n        M = 3 * 2 ** (exponent - 2)\n        # 0.77-the maximal share of occupied buckets\n        self.series = Series(np.random.randint(0, M, M)).astype(dtype)\n    \n        values = np.random.randint(0, M, M).astype(dtype)\n        if title == \"inside\":\n            self.values = values\n        elif title == \"outside\":\n            self.values = values + M\n        else:\n            raise ValueError(title)",
         "min_run_count": 2,
         "name": "algos.isin.IsinAlmostFullWithRandomInt.time_isin",
         "number": 0,
@@ -564,11 +580,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "23642372d0b74565a6ac31cbb85169201c035aaf0f560d2d3a25e85de877a793",
+        "version": "4511839e6a4402d9c6a3c41e95fbfd6c61eb07d38c9d0069b10c837a5dfb0bb4",
         "warmup_time": -1
     },
     "algos.isin.IsinWithArange.time_isin": {
-        "code": "class IsinWithArange:\n    def time_isin(self, dtype, M, offset_factor):\n        self.series.isin(self.values)\n\n    def setup(self, dtype, M, offset_factor):\n        offset = int(M * offset_factor)\n        np.random.seed(42)\n        tmp = Series(np.random.randint(offset, M + offset, 10 ** 6))\n        self.series = tmp.astype(dtype)\n        self.values = np.arange(M).astype(dtype)",
+        "code": "class IsinWithArange:\n    def time_isin(self, dtype, M, offset_factor):\n        self.series.isin(self.values)\n\n    def setup(self, dtype, M, offset_factor):\n        offset = int(M * offset_factor)\n        tmp = Series(np.random.randint(offset, M + offset, 10 ** 6))\n        self.series = tmp.astype(dtype)\n        self.values = np.arange(M).astype(dtype)",
         "min_run_count": 2,
         "name": "algos.isin.IsinWithArange.time_isin",
         "number": 0,
@@ -601,7 +617,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "c668ef01b9d67380ab397386a8285dd2961229a81d87b2869a8bc5d1efeb9c0e",
+        "version": "3bdbc220596aabea1853b2ae39c239b66d30867092f00d8b6528caa6ee450a08",
         "warmup_time": -1
     },
     "algos.isin.IsinWithArangeSorted.time_isin": {
@@ -638,7 +654,7 @@
         "warmup_time": -1
     },
     "algos.isin.IsinWithRandomFloat.time_isin": {
-        "code": "class IsinWithRandomFloat:\n    def time_isin(self, dtype, size, title):\n        self.series.isin(self.values)\n\n    def setup(self, dtype, size, title):\n        np.random.seed(42)\n        self.values = np.random.rand(size)\n        self.series = Series(self.values).astype(dtype)\n        np.random.shuffle(self.values)\n    \n        if title == \"outside\":\n            self.values = self.values + 0.1",
+        "code": "class IsinWithRandomFloat:\n    def time_isin(self, dtype, size, title):\n        self.series.isin(self.values)\n\n    def setup(self, dtype, size, title):\n        self.values = np.random.rand(size)\n        self.series = Series(self.values).astype(dtype)\n        np.random.shuffle(self.values)\n    \n        if title == \"outside\":\n            self.values = self.values + 0.1",
         "min_run_count": 2,
         "name": "algos.isin.IsinWithRandomFloat.time_isin",
         "number": 0,
@@ -673,7 +689,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "39d95ad6a7f6a8bccb6d6f46b0e6ab626bf19290ae59819227c7378665b67d1c",
+        "version": "15f9f9bb41efd706d95b1a43ff72e5572dedbb074050cd2b857e7a91213c60a8",
         "warmup_time": -1
     },
     "arithmetic.AddOverflowArray.time_add_overflow_arr_mask_nan": {
@@ -3933,7 +3949,7 @@
         "warmup_time": -1
     },
     "frame_ctor.FromDictwithTimestamp.time_dict_with_timestamp_offsets": {
-        "code": "class FromDictwithTimestamp:\n    def time_dict_with_timestamp_offsets(self, offset):\n        DataFrame(self.d)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDictwithTimestamp:\n    def setup(self, offset):\n        N = 10 ** 3\n        np.random.seed(1234)\n        idx = date_range(Timestamp(\"1/1/1900\"), freq=offset, periods=N)\n        df = DataFrame(np.random.randn(N, 10), index=idx)\n        self.d = df.to_dict()",
+        "code": "class FromDictwithTimestamp:\n    def time_dict_with_timestamp_offsets(self, offset):\n        DataFrame(self.d)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDictwithTimestamp:\n    def setup(self, offset):\n        N = 10 ** 3\n        idx = date_range(Timestamp(\"1/1/1900\"), freq=offset, periods=N)\n        df = DataFrame(np.random.randn(N, 10), index=idx)\n        self.d = df.to_dict()",
         "min_run_count": 2,
         "name": "frame_ctor.FromDictwithTimestamp.time_dict_with_timestamp_offsets",
         "number": 0,
@@ -3952,7 +3968,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "82837c24c1f3b1220bf511f21aaadf9c5cd6e289f4dd4855c68d1dcc9ac0b0a0",
+        "version": "e8f3e3a2e35776ac10a405ccc70f3713ccb878e48f0a431d553945acd8ff713e",
         "warmup_time": -1
     },
     "frame_ctor.FromLists.time_frame_from_lists": {
@@ -5156,7 +5172,7 @@
         "warmup_time": -1
     },
     "frame_methods.Rank.time_rank": {
-        "code": "class Rank:\n    def time_rank(self, dtype):\n        self.df.rank()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Rank:\n    def setup(self, dtype):\n        self.df = DataFrame(np.random.randn(10000, 10), columns=range(10), dtype=dtype)",
+        "code": "class Rank:\n    def time_rank(self, dtype):\n        self.df.rank()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Rank:\n    def setup(self, dtype):\n        self.df = DataFrame(\n            np.random.randn(10000, 10).astype(dtype), columns=range(10), dtype=dtype\n        )",
         "min_run_count": 2,
         "name": "frame_methods.Rank.time_rank",
         "number": 0,
@@ -5177,7 +5193,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "e7477c5574f9df19a4d096241d46413b97dba2cd61fbc86dd32ba1c0aff67f05",
+        "version": "4512f531d4398c0997ffb9c0b076476cab3bef280e5662032d20d3b76f2e26cb",
         "warmup_time": -1
     },
     "frame_methods.Reindex.time_reindex_axis0": {
@@ -6433,10 +6449,10 @@
         "version": "02179b80a10ef56e163f7134b90b2b3a14e1e783c29bcd78e8c839cc49c2b89a",
         "warmup_time": -1
     },
-    "groupby.CumminMax.time_frame_transform": {
-        "code": "class CumminMax:\n    def time_frame_transform(self, dtype, method):\n        self.df.groupby(\"key\").transform(method)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass CumminMax:\n    def setup(self, dtype, method):\n        N = 500_000\n        vals = np.random.randint(-10, 10, (N, 5))\n        null_vals = vals.astype(float, copy=True)\n        null_vals[::2, :] = np.nan\n        null_vals[::3, :] = np.nan\n        df = DataFrame(vals, columns=list(\"abcde\"), dtype=dtype)\n        null_df = DataFrame(null_vals, columns=list(\"abcde\"), dtype=dtype)\n        keys = np.random.randint(0, 100, size=N)\n        df[\"key\"] = keys\n        null_df[\"key\"] = keys\n        self.df = df\n        self.null_df = null_df",
+    "groupby.Cumulative.time_frame_transform": {
+        "code": "class Cumulative:\n    def time_frame_transform(self, dtype, method):\n        self.df.groupby(\"key\").transform(method)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Cumulative:\n    def setup(self, dtype, method):\n        N = 500_000\n        vals = np.random.randint(-10, 10, (N, 5))\n        null_vals = vals.astype(float, copy=True)\n        null_vals[::2, :] = np.nan\n        null_vals[::3, :] = np.nan\n        df = DataFrame(vals, columns=list(\"abcde\"), dtype=dtype)\n        null_df = DataFrame(null_vals, columns=list(\"abcde\"), dtype=dtype)\n        keys = np.random.randint(0, 100, size=N)\n        df[\"key\"] = keys\n        null_df[\"key\"] = keys\n        self.df = df\n        self.null_df = null_df",
         "min_run_count": 2,
-        "name": "groupby.CumminMax.time_frame_transform",
+        "name": "groupby.Cumulative.time_frame_transform",
         "number": 0,
         "param_names": [
             "dtype",
@@ -6451,7 +6467,8 @@
             ],
             [
                 "'cummin'",
-                "'cummax'"
+                "'cummax'",
+                "'cumsum'"
             ]
         ],
         "repeat": 0,
@@ -6460,13 +6477,13 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "0f16bb925e988d86b6df7bfe9387d46744514c48942ddadf28ed8ebd8dca0169",
+        "version": "021e341fad052e016b88d6137e2dc22a41c1e31a7050d5358eb7950b0deca589",
         "warmup_time": -1
     },
-    "groupby.CumminMax.time_frame_transform_many_nulls": {
-        "code": "class CumminMax:\n    def time_frame_transform_many_nulls(self, dtype, method):\n        self.null_df.groupby(\"key\").transform(method)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass CumminMax:\n    def setup(self, dtype, method):\n        N = 500_000\n        vals = np.random.randint(-10, 10, (N, 5))\n        null_vals = vals.astype(float, copy=True)\n        null_vals[::2, :] = np.nan\n        null_vals[::3, :] = np.nan\n        df = DataFrame(vals, columns=list(\"abcde\"), dtype=dtype)\n        null_df = DataFrame(null_vals, columns=list(\"abcde\"), dtype=dtype)\n        keys = np.random.randint(0, 100, size=N)\n        df[\"key\"] = keys\n        null_df[\"key\"] = keys\n        self.df = df\n        self.null_df = null_df",
+    "groupby.Cumulative.time_frame_transform_many_nulls": {
+        "code": "class Cumulative:\n    def time_frame_transform_many_nulls(self, dtype, method):\n        self.null_df.groupby(\"key\").transform(method)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Cumulative:\n    def setup(self, dtype, method):\n        N = 500_000\n        vals = np.random.randint(-10, 10, (N, 5))\n        null_vals = vals.astype(float, copy=True)\n        null_vals[::2, :] = np.nan\n        null_vals[::3, :] = np.nan\n        df = DataFrame(vals, columns=list(\"abcde\"), dtype=dtype)\n        null_df = DataFrame(null_vals, columns=list(\"abcde\"), dtype=dtype)\n        keys = np.random.randint(0, 100, size=N)\n        df[\"key\"] = keys\n        null_df[\"key\"] = keys\n        self.df = df\n        self.null_df = null_df",
         "min_run_count": 2,
-        "name": "groupby.CumminMax.time_frame_transform_many_nulls",
+        "name": "groupby.Cumulative.time_frame_transform_many_nulls",
         "number": 0,
         "param_names": [
             "dtype",
@@ -6481,7 +6498,8 @@
             ],
             [
                 "'cummin'",
-                "'cummax'"
+                "'cummax'",
+                "'cumsum'"
             ]
         ],
         "repeat": 0,
@@ -6490,7 +6508,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "d8894592462b33bbba3eda7925652767eb5ae4d3a534507cc844d1b33f366de2",
+        "version": "ac0a7c8dc1709cc982c0a23cbede0e108be9f8b63dc0cd84e35a5a90a96d6f89",
         "warmup_time": -1
     },
     "groupby.DateAttributes.time_len_groupby_object": {
@@ -6650,7 +6668,7 @@
         "warmup_time": -1
     },
     "groupby.GroupByMethods.time_dtype_as_field": {
-        "code": "class GroupByMethods:\n    def time_dtype_as_field(self, dtype, method, application):\n        self.as_field_method()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass GroupByMethods:\n    def setup(self, dtype, method, application):\n        if method in method_blocklist.get(dtype, {}):\n            raise NotImplementedError  # skip benchmark\n        ngroups = 1000\n        size = ngroups * 2\n        rng = np.arange(ngroups)\n        values = rng.take(np.random.randint(0, ngroups, size=size))\n        if dtype == \"int\":\n            key = np.random.randint(0, size, size=size)\n        elif dtype == \"float\":\n            key = np.concatenate(\n                [np.random.random(ngroups) * 0.1, np.random.random(ngroups) * 10.0]\n            )\n        elif dtype == \"object\":\n            key = [\"foo\"] * size\n        elif dtype == \"datetime\":\n            key = date_range(\"1/1/2011\", periods=size, freq=\"s\")\n    \n        df = DataFrame({\"values\": values, \"key\": key})\n    \n        if application == \"transform\":\n            if method == \"describe\":\n                raise NotImplementedError\n    \n            self.as_group_method = lambda: df.groupby(\"key\")[\"values\"].transform(method)\n            self.as_field_method = lambda: df.groupby(\"values\")[\"key\"].transform(method)\n        else:\n            self.as_group_method = getattr(df.groupby(\"key\")[\"values\"], method)\n            self.as_field_method = getattr(df.groupby(\"values\")[\"key\"], method)",
+        "code": "class GroupByMethods:\n    def time_dtype_as_field(self, dtype, method, application):\n        self.as_field_method()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass GroupByMethods:\n    def setup(self, dtype, method, application):\n        if method in method_blocklist.get(dtype, {}):\n            raise NotImplementedError  # skip benchmark\n        ngroups = 1000\n        size = ngroups * 2\n        rng = np.arange(ngroups)\n        values = rng.take(np.random.randint(0, ngroups, size=size))\n        if dtype == \"int\":\n            key = np.random.randint(0, size, size=size)\n        elif dtype == \"uint\":\n            key = np.random.randint(0, size, size=size, dtype=dtype)\n        elif dtype == \"float\":\n            key = np.concatenate(\n                [np.random.random(ngroups) * 0.1, np.random.random(ngroups) * 10.0]\n            )\n        elif dtype == \"object\":\n            key = [\"foo\"] * size\n        elif dtype == \"datetime\":\n            key = date_range(\"1/1/2011\", periods=size, freq=\"s\")\n    \n        df = DataFrame({\"values\": values, \"key\": key})\n    \n        if application == \"transform\":\n            if method == \"describe\":\n                raise NotImplementedError\n    \n            self.as_group_method = lambda: df.groupby(\"key\")[\"values\"].transform(method)\n            self.as_field_method = lambda: df.groupby(\"values\")[\"key\"].transform(method)\n        else:\n            self.as_group_method = getattr(df.groupby(\"key\")[\"values\"], method)\n            self.as_field_method = getattr(df.groupby(\"values\")[\"key\"], method)",
         "min_run_count": 2,
         "name": "groupby.GroupByMethods.time_dtype_as_field",
         "number": 0,
@@ -6664,7 +6682,8 @@
                 "'int'",
                 "'float'",
                 "'object'",
-                "'datetime'"
+                "'datetime'",
+                "'uint'"
             ],
             [
                 "'all'",
@@ -6713,11 +6732,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "8fedba9806a2f4360fdd485080c30238f9d6cdb5da6374158a89ec68f75b7fe5",
+        "version": "2e5821366457ad7dec8094df470d49f3ff4f7aa84ab0e701e0e8af952e1d872c",
         "warmup_time": -1
     },
     "groupby.GroupByMethods.time_dtype_as_group": {
-        "code": "class GroupByMethods:\n    def time_dtype_as_group(self, dtype, method, application):\n        self.as_group_method()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass GroupByMethods:\n    def setup(self, dtype, method, application):\n        if method in method_blocklist.get(dtype, {}):\n            raise NotImplementedError  # skip benchmark\n        ngroups = 1000\n        size = ngroups * 2\n        rng = np.arange(ngroups)\n        values = rng.take(np.random.randint(0, ngroups, size=size))\n        if dtype == \"int\":\n            key = np.random.randint(0, size, size=size)\n        elif dtype == \"float\":\n            key = np.concatenate(\n                [np.random.random(ngroups) * 0.1, np.random.random(ngroups) * 10.0]\n            )\n        elif dtype == \"object\":\n            key = [\"foo\"] * size\n        elif dtype == \"datetime\":\n            key = date_range(\"1/1/2011\", periods=size, freq=\"s\")\n    \n        df = DataFrame({\"values\": values, \"key\": key})\n    \n        if application == \"transform\":\n            if method == \"describe\":\n                raise NotImplementedError\n    \n            self.as_group_method = lambda: df.groupby(\"key\")[\"values\"].transform(method)\n            self.as_field_method = lambda: df.groupby(\"values\")[\"key\"].transform(method)\n        else:\n            self.as_group_method = getattr(df.groupby(\"key\")[\"values\"], method)\n            self.as_field_method = getattr(df.groupby(\"values\")[\"key\"], method)",
+        "code": "class GroupByMethods:\n    def time_dtype_as_group(self, dtype, method, application):\n        self.as_group_method()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass GroupByMethods:\n    def setup(self, dtype, method, application):\n        if method in method_blocklist.get(dtype, {}):\n            raise NotImplementedError  # skip benchmark\n        ngroups = 1000\n        size = ngroups * 2\n        rng = np.arange(ngroups)\n        values = rng.take(np.random.randint(0, ngroups, size=size))\n        if dtype == \"int\":\n            key = np.random.randint(0, size, size=size)\n        elif dtype == \"uint\":\n            key = np.random.randint(0, size, size=size, dtype=dtype)\n        elif dtype == \"float\":\n            key = np.concatenate(\n                [np.random.random(ngroups) * 0.1, np.random.random(ngroups) * 10.0]\n            )\n        elif dtype == \"object\":\n            key = [\"foo\"] * size\n        elif dtype == \"datetime\":\n            key = date_range(\"1/1/2011\", periods=size, freq=\"s\")\n    \n        df = DataFrame({\"values\": values, \"key\": key})\n    \n        if application == \"transform\":\n            if method == \"describe\":\n                raise NotImplementedError\n    \n            self.as_group_method = lambda: df.groupby(\"key\")[\"values\"].transform(method)\n            self.as_field_method = lambda: df.groupby(\"values\")[\"key\"].transform(method)\n        else:\n            self.as_group_method = getattr(df.groupby(\"key\")[\"values\"], method)\n            self.as_field_method = getattr(df.groupby(\"values\")[\"key\"], method)",
         "min_run_count": 2,
         "name": "groupby.GroupByMethods.time_dtype_as_group",
         "number": 0,
@@ -6731,7 +6750,8 @@
                 "'int'",
                 "'float'",
                 "'object'",
-                "'datetime'"
+                "'datetime'",
+                "'uint'"
             ],
             [
                 "'all'",
@@ -6780,7 +6800,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "c5e3fd3cc2c9e2d89a91aae73f7992994cae559313377ef4577e0e68d84d9405",
+        "version": "f1c5c93cb08e5c79fa3f5bda8dbbd9d0248bd3f1183f3b219e5c5fa4d7a184bb",
         "warmup_time": -1
     },
     "groupby.GroupManyLabels.time_sum": {
@@ -7141,6 +7161,38 @@
         "version": "27eec9eb147be5e17060fa041b6bf1efd02796180cd220cc1fdf9bc7a2489e95",
         "warmup_time": -1
     },
+    "groupby.Sample.time_sample": {
+        "code": "class Sample:\n    def time_sample(self):\n        self.df.groupby(self.groups).sample(n=1)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Sample:\n    def setup(self):\n        N = 10 ** 3\n        self.df = DataFrame({\"a\": np.zeros(N)})\n        self.groups = np.arange(0, N)\n        self.weights = np.ones(N)",
+        "min_run_count": 2,
+        "name": "groupby.Sample.time_sample",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "68b221d9354662a3ba5d7d1b908212f1bc335cd123e2fe19c4b5e622fedd9a05",
+        "warmup_time": -1
+    },
+    "groupby.Sample.time_sample_weights": {
+        "code": "class Sample:\n    def time_sample_weights(self):\n        self.df.groupby(self.groups).sample(n=1, weights=self.weights)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Sample:\n    def setup(self):\n        N = 10 ** 3\n        self.df = DataFrame({\"a\": np.zeros(N)})\n        self.groups = np.arange(0, N)\n        self.weights = np.ones(N)",
+        "min_run_count": 2,
+        "name": "groupby.Sample.time_sample_weights",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "a7283f19c2b6a59ca16073736d734d079f709382c04db333b0b0bf62b5a398ca",
+        "warmup_time": -1
+    },
     "groupby.Size.time_category_size": {
         "code": "class Size:\n    def time_category_size(self):\n        self.draws.groupby(self.cats).size()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Size:\n    def setup(self):\n        n = 10 ** 5\n        offsets = np.random.randint(n, size=n).astype(\"timedelta64[ns]\")\n        dates = np.datetime64(\"now\") + offsets\n        self.df = DataFrame(\n            {\n                \"key1\": np.random.randint(0, 500, size=n),\n                \"key2\": np.random.randint(0, 100, size=n),\n                \"value1\": np.random.randn(n),\n                \"value2\": np.random.randn(n),\n                \"value3\": np.random.randn(n),\n                \"dates\": dates,\n            }\n        )\n        self.draws = Series(np.random.randn(n))\n        labels = Series([\"foo\", \"bar\", \"baz\", \"qux\"] * (n // 4))\n        self.cats = labels.astype(\"category\")",
         "min_run_count": 2,
@@ -7474,7 +7526,7 @@
         "warmup_time": -1
     },
     "hash_functions.NumericSeriesIndexingShuffled.time_loc_slice": {
-        "code": "class NumericSeriesIndexingShuffled:\n    def time_loc_slice(self, index, N):\n        # trigger building of mapping\n        self.data.loc[:800]\n\n    def setup(self, index, N):\n        vals = np.array(list(range(55)) + [54] + list(range(55, N - 1)))\n        np.random.seed(42)\n        np.random.shuffle(vals)\n        indices = index(vals)\n        self.data = pd.Series(np.arange(N), index=indices)",
+        "code": "class NumericSeriesIndexingShuffled:\n    def time_loc_slice(self, index, N):\n        # trigger building of mapping\n        self.data.loc[:800]\n\n    def setup(self, index, N):\n        vals = np.array(list(range(55)) + [54] + list(range(55, N - 1)))\n        np.random.shuffle(vals)\n        indices = index(vals)\n        self.data = pd.Series(np.arange(N), index=indices)",
         "min_run_count": 2,
         "name": "hash_functions.NumericSeriesIndexingShuffled.time_loc_slice",
         "number": 0,
@@ -7502,7 +7554,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "6a3b3faf934cfbe0837dce39d0edc665b3ee6df872ba4f3991487e3780bf3199",
+        "version": "3c20465e8c11d0248c3518850d998ff4e2057e4887b2e53bc01804188718b746",
         "warmup_time": -1
     },
     "hash_functions.UniqueAndFactorizeArange.time_factorize": {
@@ -8923,7 +8975,7 @@
         "warmup_time": -1
     },
     "indexing.InsertColumns.time_assign_list_like_with_setitem": {
-        "code": "class InsertColumns:\n    def time_assign_list_like_with_setitem(self):\n        np.random.seed(1234)\n        self.df[list(range(100))] = np.random.randn(self.N, 100)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))",
+        "code": "class InsertColumns:\n    def time_assign_list_like_with_setitem(self):\n        self.df[list(range(100))] = np.random.randn(self.N, 100)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))",
         "min_run_count": 2,
         "name": "indexing.InsertColumns.time_assign_list_like_with_setitem",
         "number": 0,
@@ -8935,7 +8987,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "e317fc867e31c42210d5e0e9c0e90934a06f8f994a5622689bfcbbee2e6b67dc",
+        "version": "f5c977a84b67c7bc7e089e88b954203a2fc418585fcc4bf2a8ae28a56265f8ce",
         "warmup_time": -1
     },
     "indexing.InsertColumns.time_assign_list_of_columns_concat": {
@@ -8955,7 +9007,7 @@
         "warmup_time": -1
     },
     "indexing.InsertColumns.time_assign_with_setitem": {
-        "code": "class InsertColumns:\n    def time_assign_with_setitem(self):\n        np.random.seed(1234)\n        for i in range(100):\n            self.df[i] = np.random.randn(self.N)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))",
+        "code": "class InsertColumns:\n    def time_assign_with_setitem(self):\n        for i in range(100):\n            self.df[i] = np.random.randn(self.N)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))",
         "min_run_count": 2,
         "name": "indexing.InsertColumns.time_assign_with_setitem",
         "number": 0,
@@ -8967,11 +9019,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "560f1dfb3cec3e5cd9ee8a5a26e820880b010c7a949b3a8aa5b56ffaf5ce23d8",
+        "version": "444ec09c04aff55bcc0bb7c588f08c222ef3a780a4df03da7ee3c30431d98c73",
         "warmup_time": -1
     },
     "indexing.InsertColumns.time_insert": {
-        "code": "class InsertColumns:\n    def time_insert(self):\n        np.random.seed(1234)\n        for i in range(100):\n            self.df.insert(0, i, np.random.randn(self.N), allow_duplicates=True)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))",
+        "code": "class InsertColumns:\n    def time_insert(self):\n        for i in range(100):\n            self.df.insert(0, i, np.random.randn(self.N), allow_duplicates=True)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))",
         "min_run_count": 2,
         "name": "indexing.InsertColumns.time_insert",
         "number": 0,
@@ -8983,7 +9035,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "17afd63b8c6538d0eea83ce3621d1b35b638aad809c766b8e735c4d82475805d",
+        "version": "95d1b5bc84a07a8661e73ea56178db44f5b93d5a196be3f24ae024c9bec55af2",
         "warmup_time": -1
     },
     "indexing.IntervalIndexing.time_getitem_list": {
@@ -12214,7 +12266,7 @@
         "warmup_time": -1
     },
     "io.style.Render.peakmem_apply_render": {
-        "code": "class Render:\n    def peakmem_apply_render(self, cols, rows):\n        self._style_apply()\n        self.st._render_html()\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
+        "code": "class Render:\n    def peakmem_apply_render(self, cols, rows):\n        self._style_apply()\n        self.st._render_html(True, True)\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
         "name": "io.style.Render.peakmem_apply_render",
         "param_names": [
             "cols",
@@ -12234,10 +12286,10 @@
         "timeout": 60.0,
         "type": "peakmemory",
         "unit": "bytes",
-        "version": "b68895af49a55198131d3a62947c27bc57b33a594dfb7207ff5fa31add95aec1"
+        "version": "f1291d9b0cee2ed29164614c2827a58907e0943d031efe0a1f700dd7bb3ea1ef"
     },
     "io.style.Render.peakmem_classes_render": {
-        "code": "class Render:\n    def peakmem_classes_render(self, cols, rows):\n        self._style_classes()\n        self.st._render_html()\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
+        "code": "class Render:\n    def peakmem_classes_render(self, cols, rows):\n        self._style_classes()\n        self.st._render_html(True, True)\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
         "name": "io.style.Render.peakmem_classes_render",
         "param_names": [
             "cols",
@@ -12257,7 +12309,7 @@
         "timeout": 60.0,
         "type": "peakmemory",
         "unit": "bytes",
-        "version": "2d3bcd79a54acdd1a796fbb5e00c7aaf368643d6c35ffaf561a55c3066b68b6b"
+        "version": "1d74d0ee63b8ddbcb67f37a2c6260ebe84c54ec1d2650db12d284630efa672c9"
     },
     "io.style.Render.peakmem_format_render": {
         "code": "class Render:\n    def peakmem_format_render(self, cols, rows):\n        self._style_format()\n        self.st.render()\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
@@ -12283,7 +12335,7 @@
         "version": "ab961bc1fa46f108aa9e39ca2e2374a469ef28383e02ad24ba50aaebf0fccc69"
     },
     "io.style.Render.time_apply_render": {
-        "code": "class Render:\n    def time_apply_render(self, cols, rows):\n        self._style_apply()\n        self.st._render_html()\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
+        "code": "class Render:\n    def time_apply_render(self, cols, rows):\n        self._style_apply()\n        self.st._render_html(True, True)\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
         "min_run_count": 2,
         "name": "io.style.Render.time_apply_render",
         "number": 0,
@@ -12308,11 +12360,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "0e429773806783e414591020be3b1348a587f993fc2789dbaba8dda9ea2df015",
+        "version": "b7713a928f5b63249a63e44399f6d18a893bff35ae8541e666af0885aec0a166",
         "warmup_time": -1
     },
     "io.style.Render.time_classes_render": {
-        "code": "class Render:\n    def time_classes_render(self, cols, rows):\n        self._style_classes()\n        self.st._render_html()\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
+        "code": "class Render:\n    def time_classes_render(self, cols, rows):\n        self._style_classes()\n        self.st._render_html(True, True)\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
         "min_run_count": 2,
         "name": "io.style.Render.time_classes_render",
         "number": 0,
@@ -12337,7 +12389,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "efc51f3ccb130a5e38670b901bc9db10d4ded217cfa8dc31193abed698c9906f",
+        "version": "e385c7e77a27a0e29b3941e7cf3c0727f5f83d8b6279cd9500e63fb1f630d7d5",
         "warmup_time": -1
     },
     "io.style.Render.time_format_render": {
@@ -13894,6 +13946,22 @@
         "unit": "seconds",
         "version": "2e9a86e7434b9d0777e5ccc8fc9165eaf99b3ae701c88bb9a2f2bfbb3a8742c1",
         "warmup_time": -1
+    },
+    "plotting.BackendLoading.time_get_plot_backend": {
+        "code": "class BackendLoading:\n    def time_get_plot_backend(self):\n        _get_plot_backend(\"my_backend\")\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass BackendLoading:\n    def setup(self):\n        dist = pkg_resources.get_distribution(\"pandas\")\n        spec = importlib.machinery.ModuleSpec(\"my_backend\", None)\n        mod = importlib.util.module_from_spec(spec)\n        mod.plot = lambda *args, **kwargs: 1\n    \n        backends = pkg_resources.get_entry_map(\"pandas\")\n        my_entrypoint = pkg_resources.EntryPoint(\n            \"pandas_plotting_backend\", mod.__name__, dist=dist\n        )\n        backends[\"pandas_plotting_backends\"][mod.__name__] = my_entrypoint\n        for i in range(10):\n            backends[\"pandas_plotting_backends\"][str(i)] = my_entrypoint\n        sys.modules[\"my_backend\"] = mod",
+        "min_run_count": 2,
+        "name": "plotting.BackendLoading.time_get_plot_backend",
+        "number": 1,
+        "param_names": [],
+        "params": [],
+        "repeat": 1,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "1bff19c5665b66ee248c44123bb06a284926260cb79caa71d59b4e0f5e63a491",
+        "warmup_time": 0
     },
     "plotting.FramePlotting.time_frame_plot": {
         "code": "class FramePlotting:\n    def time_frame_plot(self, kind):\n        self.df.plot(x=\"x\", y=\"y\", kind=kind)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FramePlotting:\n    def setup(self, kind):\n        if kind in [\"bar\", \"barh\", \"pie\"]:\n            n = 100\n        elif kind in [\"kde\", \"scatter\", \"hexbin\"]:\n            n = 10000\n        else:\n            n = 1000000\n    \n        self.x = Series(np.random.randn(n))\n        self.y = Series(np.random.randn(n))\n        if kind in [\"area\", \"pie\"]:\n            self.x = self.x.abs()\n            self.y = self.y.abs()\n        self.df = DataFrame({\"x\": self.x, \"y\": self.y})",
@@ -15949,6 +16017,29 @@
         "version": "30880eb453b9d41a953d95fc25ba24088b0a48b94ab49ea12406e4abc0b976ac",
         "warmup_time": -1
     },
+    "rolling.TableMethod.time_ewm_mean": {
+        "code": "class TableMethod:\n    def time_ewm_mean(self, method):\n        self.df.ewm(1, method=method).mean(engine=\"numba\")\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass TableMethod:\n    def setup(self, method):\n        self.df = pd.DataFrame(np.random.randn(10, 1000))",
+        "min_run_count": 2,
+        "name": "rolling.TableMethod.time_ewm_mean",
+        "number": 0,
+        "param_names": [
+            "method"
+        ],
+        "params": [
+            [
+                "'single'",
+                "'table'"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "446dcdc251bda1381a3cf943305e8a6a22ea15ca4513ec2dc7454a8692ab99ad",
+        "warmup_time": -1
+    },
     "rolling.VariableWindowMethods.peakmem_rolling": {
         "code": "class Methods:\n    def peakmem_rolling(self, constructor, window, dtype, method):\n        getattr(self.roll, method)()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass VariableWindowMethods:\n    def setup(self, constructor, window, dtype, method):\n        N = 10 ** 5\n        arr = (100 * np.random.random(N)).astype(dtype)\n        index = pd.date_range(\"2017-01-01\", periods=N, freq=\"5s\")\n        self.roll = getattr(pd, constructor)(arr, index=index).rolling(window)",
         "name": "rolling.VariableWindowMethods.peakmem_rolling",
@@ -16195,7 +16286,7 @@
         "warmup_time": -1
     },
     "series_methods.Mode.time_mode": {
-        "code": "class Mode:\n    def time_mode(self, N, dtype):\n        self.s.mode()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Mode:\n    def setup(self, N, dtype):\n        np.random.seed(42)\n        self.s = Series(np.random.randint(0, N, size=10 * N)).astype(dtype)",
+        "code": "class Mode:\n    def time_mode(self, N, dtype):\n        self.s.mode()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Mode:\n    def setup(self, N, dtype):\n        self.s = Series(np.random.randint(0, N, size=10 * N)).astype(dtype)",
         "min_run_count": 2,
         "name": "series_methods.Mode.time_mode",
         "number": 0,
@@ -16222,7 +16313,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "771bd1c2e478deaf2109bf430657744b292ee0c33391aee7302835029a260ee0",
+        "version": "293b41b446df29f5e77e19b14540c5af87a0168e4710d64dbb12037435ef4202",
         "warmup_time": -1
     },
     "series_methods.NSort.time_nlargest": {
@@ -17336,7 +17427,7 @@
         "warmup_time": -1
     },
     "strings.Contains.time_contains": {
-        "code": "class Contains:\n    def time_contains(self, dtype, regex):\n        self.s.str.contains(\"A\", regex=regex)\n\n    def setup(self, dtype, regex):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Contains:\n    def time_contains(self, dtype, regex):\n        self.s.str.contains(\"A\", regex=regex)\n\n    def setup(self, dtype, regex):\n        super().setup(dtype)",
         "min_run_count": 2,
         "name": "strings.Contains.time_contains",
         "number": 0,
@@ -17347,8 +17438,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ],
             [
                 "True",
@@ -17361,23 +17452,31 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "80a44e8ce421855c5035e70ce67ed8c1fd1106ae4c0f34d41192abc03c86017b",
+        "version": "059d755b738e508f2767456a3bcb5561731b1d7d8ac1ad2e92fddc4828e30270",
         "warmup_time": -1
     },
     "strings.Dummies.time_get_dummies": {
-        "code": "class Dummies:\n    def time_get_dummies(self):\n        self.s.str.get_dummies(\"|\")\n\n    def setup(self):\n        self.s = Series(tm.makeStringIndex(10 ** 5)).str.join(\"|\")",
+        "code": "class Dummies:\n    def time_get_dummies(self, dtype):\n        self.s.str.get_dummies(\"|\")\n\n    def setup(self, dtype):\n        super().setup(dtype)\n        self.s = self.s.str.join(\"|\")",
         "min_run_count": 2,
         "name": "strings.Dummies.time_get_dummies",
         "number": 0,
-        "param_names": [],
-        "params": [],
+        "param_names": [
+            "dtype"
+        ],
+        "params": [
+            [
+                "'str'",
+                "'string[python]'",
+                "'string[pyarrow]'"
+            ]
+        ],
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "6b7b9d5cd10b2065fbe01d58d676387e948f905052801ab7c630e029ba4194ca",
+        "version": "05a8b467626fc1ca2b62daa6ea86653c41533ff9cba30dddb51f622ecbe0e6e6",
         "warmup_time": -1
     },
     "strings.Encode.time_encode_decode": {
@@ -17396,8 +17495,61 @@
         "version": "7991afc08fb85f2e7a8a10a61fdf3f06df4a2d94f48fe9cd517f60f1b2a56a99",
         "warmup_time": -1
     },
+    "strings.Extract.time_extract_single_group": {
+        "code": "class Extract:\n    def time_extract_single_group(self, dtype, expand):\n        with warnings.catch_warnings(record=True):\n            self.s.str.extract(\"(\\\\w*)A\", expand=expand)\n\n    def setup(self, dtype, expand):\n        super().setup(dtype)",
+        "min_run_count": 2,
+        "name": "strings.Extract.time_extract_single_group",
+        "number": 0,
+        "param_names": [
+            "dtype",
+            "expand"
+        ],
+        "params": [
+            [
+                "'str'",
+                "'string[python]'",
+                "'string[pyarrow]'"
+            ],
+            [
+                "True",
+                "False"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "4a4c5c7bdd1645c137d0f4bcafc4eb9b92be955e5bb27fd6fe7994d2466c32e7",
+        "warmup_time": -1
+    },
+    "strings.Iter.time_iter": {
+        "code": "class Iter:\n    def time_iter(self, dtype):\n        for i in self.s:\n            pass\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "min_run_count": 2,
+        "name": "strings.Iter.time_iter",
+        "number": 0,
+        "param_names": [
+            "dtype"
+        ],
+        "params": [
+            [
+                "'str'",
+                "'string[python]'",
+                "'string[pyarrow]'"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "4d15a54cf324d7b6be14a1f4043978218afb00a8020ad142a95f929196fe12e8",
+        "warmup_time": -1
+    },
     "strings.Methods.time_center": {
-        "code": "class Methods:\n    def time_center(self, dtype):\n        self.s.str.center(100)\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_center(self, dtype):\n        self.s.str.center(100)\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_center",
         "number": 0,
@@ -17407,8 +17559,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17417,11 +17569,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "c20f446944ef22d664d0c2983c06660d4eb5a46ac11c6458b641eb2b1e930f55",
+        "version": "7a7f2cf584fcc50e2f328c21435138c1b401beb8524d976bf7b00598e990b686",
         "warmup_time": -1
     },
     "strings.Methods.time_count": {
-        "code": "class Methods:\n    def time_count(self, dtype):\n        self.s.str.count(\"A\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_count(self, dtype):\n        self.s.str.count(\"A\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_count",
         "number": 0,
@@ -17431,8 +17583,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17441,11 +17593,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "277b7a1bb873ace0340d95ae68b0e7cbc441fb6abab53b938c89cdc3987f628c",
+        "version": "902f68f169d6634211bdcad4fa69acffd0a36d7a1c374d9cc9a99995b7d81bae",
         "warmup_time": -1
     },
     "strings.Methods.time_endswith": {
-        "code": "class Methods:\n    def time_endswith(self, dtype):\n        self.s.str.endswith(\"A\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_endswith(self, dtype):\n        self.s.str.endswith(\"A\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_endswith",
         "number": 0,
@@ -17455,8 +17607,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17465,11 +17617,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "74f1872c348ddd5c43226bdc0cd09a953164810c34fb4aee15909d6d8982e6b6",
+        "version": "2c979ce21931d014571b446bf36c590da34c1df693a1e12ca0c6ce62fcb1e731",
         "warmup_time": -1
     },
     "strings.Methods.time_extract": {
-        "code": "class Methods:\n    def time_extract(self, dtype):\n        with warnings.catch_warnings(record=True):\n            self.s.str.extract(\"(\\\\w*)A(\\\\w*)\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_extract(self, dtype):\n        with warnings.catch_warnings(record=True):\n            self.s.str.extract(\"(\\\\w*)A(\\\\w*)\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_extract",
         "number": 0,
@@ -17479,8 +17631,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17489,11 +17641,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "33c77a1aa215795afc0ddb10bf00cc8ba7bacf0a0461cbbecddbd5a691c34350",
+        "version": "b72781221e7284e96000a80bba9ad2fbfb927a84359a16758cc8620400059d72",
         "warmup_time": -1
     },
     "strings.Methods.time_find": {
-        "code": "class Methods:\n    def time_find(self, dtype):\n        self.s.str.find(\"[A-Z]+\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_find(self, dtype):\n        self.s.str.find(\"[A-Z]+\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_find",
         "number": 0,
@@ -17503,8 +17655,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17513,11 +17665,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "328533abe6280ded64a8d0aba8b12a296e7f6c1294451df12531f3e5019d32f2",
+        "version": "1affc9a899eab2dac712d60b6213e14262e026bd0c218f357bafe2ea6ccead72",
         "warmup_time": -1
     },
     "strings.Methods.time_findall": {
-        "code": "class Methods:\n    def time_findall(self, dtype):\n        self.s.str.findall(\"[A-Z]+\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_findall(self, dtype):\n        self.s.str.findall(\"[A-Z]+\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_findall",
         "number": 0,
@@ -17527,8 +17679,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17537,11 +17689,35 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "00b65aae985aadc5b48f6f6a76651a6a08ab1e9961eadb4da2fdabf72ef3bf77",
+        "version": "5d78272de414065e71b12302153845570e9a9113ec64d91c90e7a736203877a1",
+        "warmup_time": -1
+    },
+    "strings.Methods.time_fullmatch": {
+        "code": "class Methods:\n    def time_fullmatch(self, dtype):\n        self.s.str.fullmatch(\"A\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "min_run_count": 2,
+        "name": "strings.Methods.time_fullmatch",
+        "number": 0,
+        "param_names": [
+            "dtype"
+        ],
+        "params": [
+            [
+                "'str'",
+                "'string[python]'",
+                "'string[pyarrow]'"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "764956d315bf83b0af4d9fa75f78e9c9247c5f517fcaa6e7be06f47a92d0e2e2",
         "warmup_time": -1
     },
     "strings.Methods.time_get": {
-        "code": "class Methods:\n    def time_get(self, dtype):\n        self.s.str.get(0)\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_get(self, dtype):\n        self.s.str.get(0)\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_get",
         "number": 0,
@@ -17551,8 +17727,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17561,11 +17737,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "e773e32ef6a8b581991d8288c9ebffebae607e86c72da5f73af0d12a3771dd22",
+        "version": "f5501f5deb099602e5199b2ec4e63758d4dfe04e6320f0ee9ba220d0a43183c9",
         "warmup_time": -1
     },
     "strings.Methods.time_isalnum": {
-        "code": "class Methods:\n    def time_isalnum(self, dtype):\n        self.s.str.isalnum()\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_isalnum(self, dtype):\n        self.s.str.isalnum()\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_isalnum",
         "number": 0,
@@ -17575,8 +17751,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17585,11 +17761,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "5646cd88163711f4bd2c954887ced3e5d6a66e2baabd6b661c5803e502bb4b4c",
+        "version": "219ee7320adc247e3c99b99ad118ba2aab3da4333b0903a31e9e0d2fa27a3f43",
         "warmup_time": -1
     },
     "strings.Methods.time_isalpha": {
-        "code": "class Methods:\n    def time_isalpha(self, dtype):\n        self.s.str.isalpha()\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_isalpha(self, dtype):\n        self.s.str.isalpha()\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_isalpha",
         "number": 0,
@@ -17599,8 +17775,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17609,11 +17785,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "3eab2ae674565530d405f737e7c367fea20e2a381cbd3a09712d01afc50f4b89",
+        "version": "20944810c059690bd60695c06195842d4563af3b76b78cf27be33558a23a1664",
         "warmup_time": -1
     },
     "strings.Methods.time_isdecimal": {
-        "code": "class Methods:\n    def time_isdecimal(self, dtype):\n        self.s.str.isdecimal()\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_isdecimal(self, dtype):\n        self.s.str.isdecimal()\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_isdecimal",
         "number": 0,
@@ -17623,8 +17799,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17633,11 +17809,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "f5237e4bbdc2736e7069974a27ca05ae12a2debf4c81ef3431e3b9a8c4e67b28",
+        "version": "eccf8243af014ebfe11ce7ef9cafb44f0aac9e6b42e5285460d571d783ec2c83",
         "warmup_time": -1
     },
     "strings.Methods.time_isdigit": {
-        "code": "class Methods:\n    def time_isdigit(self, dtype):\n        self.s.str.isdigit()\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_isdigit(self, dtype):\n        self.s.str.isdigit()\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_isdigit",
         "number": 0,
@@ -17647,8 +17823,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17657,11 +17833,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "c9b0c4e004844242cc565687ce788351d86a9ab69625c95354ae96f4ee5c2ed9",
+        "version": "4c65917e40f06f8d6fcd09dd6722837bd096c6c14311ae58183e45f17a0c9d5e",
         "warmup_time": -1
     },
     "strings.Methods.time_islower": {
-        "code": "class Methods:\n    def time_islower(self, dtype):\n        self.s.str.islower()\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_islower(self, dtype):\n        self.s.str.islower()\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_islower",
         "number": 0,
@@ -17671,8 +17847,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17681,11 +17857,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "7a4fd4b9980be1d55e8b2043ebe04b411fe69e7c474139adea175b8802f8e32b",
+        "version": "8f09d20e6c490d30e5e6b3d3a41d10eae4a6efd9b6d64b6cb3aadcf82dacc863",
         "warmup_time": -1
     },
     "strings.Methods.time_isnumeric": {
-        "code": "class Methods:\n    def time_isnumeric(self, dtype):\n        self.s.str.isnumeric()\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_isnumeric(self, dtype):\n        self.s.str.isnumeric()\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_isnumeric",
         "number": 0,
@@ -17695,8 +17871,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17705,11 +17881,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "5272a919584cce94de7d6e2260ae1c5493a0f056c766bbe8a556511223c40693",
+        "version": "be9790062d31abaa74a163652972c55b5a61bfec0134bcafdbacb575bb4911a9",
         "warmup_time": -1
     },
     "strings.Methods.time_isspace": {
-        "code": "class Methods:\n    def time_isspace(self, dtype):\n        self.s.str.isspace()\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_isspace(self, dtype):\n        self.s.str.isspace()\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_isspace",
         "number": 0,
@@ -17719,8 +17895,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17729,11 +17905,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "5d0bd2e4299ecf395f9bca9e9b921ab8911a8b70f743ff281d73d5d5131f0357",
+        "version": "3d07dc1aabbbc6c3a0441c1e2b148ee44ee3e5b4bb6ee80203e43c5ea0b41ae3",
         "warmup_time": -1
     },
     "strings.Methods.time_istitle": {
-        "code": "class Methods:\n    def time_istitle(self, dtype):\n        self.s.str.istitle()\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_istitle(self, dtype):\n        self.s.str.istitle()\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_istitle",
         "number": 0,
@@ -17743,8 +17919,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17753,11 +17929,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "e0e541e2ff6cc7db6c15755f0913400d1e904d125fd10f34da0f8a6975d7bd63",
+        "version": "20f8091f7e76b4236271efaf120b5a156c3dd1a25b74e6a6db9c5116f42be48d",
         "warmup_time": -1
     },
     "strings.Methods.time_isupper": {
-        "code": "class Methods:\n    def time_isupper(self, dtype):\n        self.s.str.isupper()\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_isupper(self, dtype):\n        self.s.str.isupper()\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_isupper",
         "number": 0,
@@ -17767,8 +17943,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17777,11 +17953,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "1c86dc2f885d97360388b13adbbe3b2a9e416ca5f7a3df6f5fb19f1b9059c121",
+        "version": "be2ff160b2c928b42882607c8b78389c12a68efa268ed07dad86ac97fb139192",
         "warmup_time": -1
     },
     "strings.Methods.time_join": {
-        "code": "class Methods:\n    def time_join(self, dtype):\n        self.s.str.join(\" \")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_join(self, dtype):\n        self.s.str.join(\" \")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_join",
         "number": 0,
@@ -17791,8 +17967,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17801,11 +17977,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "17b5f930af32a928ca95c97240347c332ca8fc34f5ffaaa89556450d1c8f5766",
+        "version": "435f1452d7afd6dbc93aec8d8c7a3dfc18692db5ec5b1a6098445f05c715fb4b",
         "warmup_time": -1
     },
     "strings.Methods.time_len": {
-        "code": "class Methods:\n    def time_len(self, dtype):\n        self.s.str.len()\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_len(self, dtype):\n        self.s.str.len()\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_len",
         "number": 0,
@@ -17815,8 +17991,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17825,11 +18001,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "df9fc174c67145b4da5ba150ae8644e2083918b8c5dc5c6ca465c3d469286a5b",
+        "version": "561181a41997a60d2f194c782e6b156e0b81dcbf34a070c0cd535c488ac5e29e",
         "warmup_time": -1
     },
     "strings.Methods.time_lower": {
-        "code": "class Methods:\n    def time_lower(self, dtype):\n        self.s.str.lower()\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_lower(self, dtype):\n        self.s.str.lower()\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_lower",
         "number": 0,
@@ -17839,8 +18015,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17849,11 +18025,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "84f6b393922e8b52f17a613fe120d96d7573fa88426379bcef588bae52f4a15f",
+        "version": "6f6cea1ab63d6a90b6b2526cd404015dab1bdf42059b9380cdb3545a34443e31",
         "warmup_time": -1
     },
     "strings.Methods.time_lstrip": {
-        "code": "class Methods:\n    def time_lstrip(self, dtype):\n        self.s.str.lstrip(\"A\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_lstrip(self, dtype):\n        self.s.str.lstrip(\"A\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_lstrip",
         "number": 0,
@@ -17863,8 +18039,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17873,11 +18049,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "bd4974228d973c8acc312f6a9738f26bd16f4198c48d98b91edc4057496b2059",
+        "version": "a4b7141e791cac94087c92a051b4ff36c2a40f7b59bf701e9b24f27ced8a87a7",
         "warmup_time": -1
     },
     "strings.Methods.time_match": {
-        "code": "class Methods:\n    def time_match(self, dtype):\n        self.s.str.match(\"A\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_match(self, dtype):\n        self.s.str.match(\"A\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_match",
         "number": 0,
@@ -17887,8 +18063,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17897,11 +18073,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "e08c034518c2692898a6453ae7f91df25d00b4ddfe9d6327c963ba35185a2d79",
+        "version": "86677ae7b0ef994bbf7dcae5583a873e585e0fbf45e337a7d10ae9c079f2b8bd",
         "warmup_time": -1
     },
     "strings.Methods.time_normalize": {
-        "code": "class Methods:\n    def time_normalize(self, dtype):\n        self.s.str.normalize(\"NFC\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_normalize(self, dtype):\n        self.s.str.normalize(\"NFC\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_normalize",
         "number": 0,
@@ -17911,8 +18087,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17921,11 +18097,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "a387975d29f58121bdf426bd188c747cdac1abcd02ebb9756b375155d822b716",
+        "version": "7fd8675b89b4a376e2605f60a126b273204d0866572de6ae516a66d73bf97538",
         "warmup_time": -1
     },
     "strings.Methods.time_pad": {
-        "code": "class Methods:\n    def time_pad(self, dtype):\n        self.s.str.pad(100, side=\"both\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_pad(self, dtype):\n        self.s.str.pad(100, side=\"both\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_pad",
         "number": 0,
@@ -17935,8 +18111,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17945,11 +18121,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "0f3bc67ec7feae9c4aac16df312d9ecbd31a0956676bb4ffecf972db4859527b",
+        "version": "bbb44ad28fbfb63ff71da58b54ef63191c9eaccc89d28c8921aa965b32540cb3",
         "warmup_time": -1
     },
     "strings.Methods.time_partition": {
-        "code": "class Methods:\n    def time_partition(self, dtype):\n        self.s.str.partition(\"A\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_partition(self, dtype):\n        self.s.str.partition(\"A\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_partition",
         "number": 0,
@@ -17959,8 +18135,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17969,11 +18145,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "f71d8a99bf5f65b8e688548af1329cb60cb2d4f8756c0a6142a3ba2b7d0f0c7b",
+        "version": "d6c9298f66dfbdae67c7b62025dbf206d4f9f32f1a2a02bd53e3411b58255184",
         "warmup_time": -1
     },
     "strings.Methods.time_replace": {
-        "code": "class Methods:\n    def time_replace(self, dtype):\n        self.s.str.replace(\"A\", \"\\x01\\x01\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_replace(self, dtype):\n        self.s.str.replace(\"A\", \"\\x01\\x01\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_replace",
         "number": 0,
@@ -17983,8 +18159,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -17993,11 +18169,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "5a8d5d79546c767872b0e70a73c941eb6e65a5570bc7de6be7865e3540c17414",
+        "version": "8e8b7fd39589c65815b5bfa41f6d6f6918e0a665d9d337d770c8c195a8bef3bf",
         "warmup_time": -1
     },
     "strings.Methods.time_rfind": {
-        "code": "class Methods:\n    def time_rfind(self, dtype):\n        self.s.str.rfind(\"[A-Z]+\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_rfind(self, dtype):\n        self.s.str.rfind(\"[A-Z]+\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_rfind",
         "number": 0,
@@ -18007,8 +18183,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -18017,11 +18193,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "08441bcf551ef45778e0da05789105f8c4f16119d96116fcdff23482002bbdeb",
+        "version": "740dedeb1f2e5356d7c7d835f71838b00294ad4b059bd8ccbb5bafe6eb1810fe",
         "warmup_time": -1
     },
     "strings.Methods.time_rpartition": {
-        "code": "class Methods:\n    def time_rpartition(self, dtype):\n        self.s.str.rpartition(\"A\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_rpartition(self, dtype):\n        self.s.str.rpartition(\"A\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_rpartition",
         "number": 0,
@@ -18031,8 +18207,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -18041,11 +18217,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "dd538476f689389b395a3c0dff9e9d0796889c8b85ff8f653641816f4539fc50",
+        "version": "4b8493eb6af8cc594f673afd6713e7b260bb8af7f17a0e7ea93b5f7eedb33116",
         "warmup_time": -1
     },
     "strings.Methods.time_rstrip": {
-        "code": "class Methods:\n    def time_rstrip(self, dtype):\n        self.s.str.rstrip(\"A\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_rstrip(self, dtype):\n        self.s.str.rstrip(\"A\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_rstrip",
         "number": 0,
@@ -18055,8 +18231,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -18065,11 +18241,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "8101991b64bb547266f279441920d3e972af10de7bb7eb71d8178bfe1f473ba7",
+        "version": "5013724b5f8e43b609681412f5ed00a1199f48b37c508d0b7a56b9b0f1694efd",
         "warmup_time": -1
     },
     "strings.Methods.time_slice": {
-        "code": "class Methods:\n    def time_slice(self, dtype):\n        self.s.str.slice(5, 15, 2)\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_slice(self, dtype):\n        self.s.str.slice(5, 15, 2)\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_slice",
         "number": 0,
@@ -18079,8 +18255,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -18089,11 +18265,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "a22037a17945b960af113b80566dbba1efd1d2f5fc82bc830e9527fa8a8fb393",
+        "version": "fd25432e8413c851228736aed1f22d6d762b9c62dbb9727a63f37d7099a150b6",
         "warmup_time": -1
     },
     "strings.Methods.time_startswith": {
-        "code": "class Methods:\n    def time_startswith(self, dtype):\n        self.s.str.startswith(\"A\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_startswith(self, dtype):\n        self.s.str.startswith(\"A\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_startswith",
         "number": 0,
@@ -18103,8 +18279,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -18113,11 +18289,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "4e4ab7480d016145cd02a0c5cafc7e18a0a3352f403c4cc1e320851a9186367d",
+        "version": "f581d64c86db51224383ce6f416ecf26fd6d8f14f715fb22a9a7ee4eed451393",
         "warmup_time": -1
     },
     "strings.Methods.time_strip": {
-        "code": "class Methods:\n    def time_strip(self, dtype):\n        self.s.str.strip(\"A\")\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_strip(self, dtype):\n        self.s.str.strip(\"A\")\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_strip",
         "number": 0,
@@ -18127,8 +18303,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -18137,11 +18313,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "287c5d465d88d27df81c3624ec67fa0bc82484f8b29d7e5dc5b5fa1f9f4c6319",
+        "version": "d610c994010f8b500f34f12e30baa599c4eb8a9e28efea9c87427b731079ea05",
         "warmup_time": -1
     },
     "strings.Methods.time_title": {
-        "code": "class Methods:\n    def time_title(self, dtype):\n        self.s.str.title()\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_title(self, dtype):\n        self.s.str.title()\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_title",
         "number": 0,
@@ -18151,8 +18327,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -18161,11 +18337,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "e98cbbea7d995741c3b054ec0f9ebca13161542ea4e70483dead99a45fc4ecf2",
+        "version": "5ecb2d5fea0b7d7ffd93fe5d47fc88f40aaa882b8f1ba3e899c7304f0dba9a5d",
         "warmup_time": -1
     },
     "strings.Methods.time_translate": {
-        "code": "class Methods:\n    def time_translate(self, dtype):\n        self.s.str.translate({\"A\": \"\\x01\\x01\"})\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_translate(self, dtype):\n        self.s.str.translate({\"A\": \"\\x01\\x01\"})\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_translate",
         "number": 0,
@@ -18175,8 +18351,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -18185,11 +18361,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "afb4896d01db827ff91b510528130e4c4c7bd230581ff1e8de51021611486218",
+        "version": "e7f29c2170cf1dae472b2cbbef6910e1b9b83219435a78926d263e07dec27b7d",
         "warmup_time": -1
     },
     "strings.Methods.time_upper": {
-        "code": "class Methods:\n    def time_upper(self, dtype):\n        self.s.str.upper()\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_upper(self, dtype):\n        self.s.str.upper()\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_upper",
         "number": 0,
@@ -18199,8 +18375,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -18209,11 +18385,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "7269b2b96d237825ab4e66359b5459ed59afd0652da561a3d454187cf1ec132d",
+        "version": "273a969b6b4c93b54318cdfbfd2ca3b603bb790b6d2e4666a232b9a5a10a165c",
         "warmup_time": -1
     },
     "strings.Methods.time_wrap": {
-        "code": "class Methods:\n    def time_wrap(self, dtype):\n        self.s.str.wrap(10)\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_wrap(self, dtype):\n        self.s.str.wrap(10)\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_wrap",
         "number": 0,
@@ -18223,8 +18399,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -18233,11 +18409,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "ed1db5d22334e27e5a69f57cf4efbbb000315a7367aa746b6a1cef7941c71755",
+        "version": "c9329b6d87f59f5a2c9211417118ab998abf81e2064967f215474970613139fc",
         "warmup_time": -1
     },
     "strings.Methods.time_zfill": {
-        "code": "class Methods:\n    def time_zfill(self, dtype):\n        self.s.str.zfill(10)\n\n    def setup(self, dtype):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Methods:\n    def time_zfill(self, dtype):\n        self.s.str.zfill(10)\n\nclass Dtypes:\n    def setup(self, dtype):\n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype)\n        except ImportError:\n            raise NotImplementedError",
         "min_run_count": 2,
         "name": "strings.Methods.time_zfill",
         "number": 0,
@@ -18247,8 +18423,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ]
         ],
         "repeat": 0,
@@ -18257,7 +18433,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "01aa5e3c08e647ebae07dd74be1c88af1767edfa7086e71973971b8b9da77148",
+        "version": "c042a289f96afca444b3f7adbd20eaaa5a3180dfdde394f3da9d651183e0a7d3",
         "warmup_time": -1
     },
     "strings.Repeat.time_repeat": {
@@ -18300,7 +18476,7 @@
         "warmup_time": -1
     },
     "strings.Split.time_rsplit": {
-        "code": "class Split:\n    def time_rsplit(self, dtype, expand):\n        self.s.str.rsplit(\"--\", expand=expand)\n\n    def setup(self, dtype, expand):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype).str.join(\"--\")\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Split:\n    def time_rsplit(self, dtype, expand):\n        self.s.str.rsplit(\"--\", expand=expand)\n\n    def setup(self, dtype, expand):\n        super().setup(dtype)\n        self.s = self.s.str.join(\"--\")",
         "min_run_count": 2,
         "name": "strings.Split.time_rsplit",
         "number": 0,
@@ -18311,8 +18487,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ],
             [
                 "True",
@@ -18325,11 +18501,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "b3252f8bed3d36548b4cacd2e2978ebfa1e129fc803360cf5aea90ee786edc62",
+        "version": "c748bf724293b4083adf3d91ce7a5255043bddcd7ecaba38777cac47767ad1f0",
         "warmup_time": -1
     },
     "strings.Split.time_split": {
-        "code": "class Split:\n    def time_split(self, dtype, expand):\n        self.s.str.split(\"--\", expand=expand)\n\n    def setup(self, dtype, expand):\n        from pandas.core.arrays.string_arrow import ArrowStringDtype  # noqa: F401\n    \n        try:\n            self.s = Series(tm.makeStringIndex(10 ** 5), dtype=dtype).str.join(\"--\")\n        except ImportError:\n            raise NotImplementedError",
+        "code": "class Split:\n    def time_split(self, dtype, expand):\n        self.s.str.split(\"--\", expand=expand)\n\n    def setup(self, dtype, expand):\n        super().setup(dtype)\n        self.s = self.s.str.join(\"--\")",
         "min_run_count": 2,
         "name": "strings.Split.time_split",
         "number": 0,
@@ -18340,8 +18516,8 @@
         "params": [
             [
                 "'str'",
-                "'string'",
-                "'arrow_string'"
+                "'string[python]'",
+                "'string[pyarrow]'"
             ],
             [
                 "True",
@@ -18354,7 +18530,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "503e07690f728401469f7075c64ae9aaffebfedd5c4454e16437669ee65cf237",
+        "version": "abecb3cbc4195a6fedc3bc41353ecd447d36060b1cd5e43944cda06edfa8a2e6",
         "warmup_time": -1
     },
     "timedelta.DatetimeAccessor.time_dt_accessor": {
