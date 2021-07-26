@@ -9102,7 +9102,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "indexing:228",
+        "setup_cache_key": "indexing:229",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -9119,7 +9119,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "indexing:228",
+        "setup_cache_key": "indexing:229",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -9136,7 +9136,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "indexing:228",
+        "setup_cache_key": "indexing:229",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -9153,7 +9153,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "indexing:228",
+        "setup_cache_key": "indexing:229",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -9170,7 +9170,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "indexing:307",
+        "setup_cache_key": "indexing:308",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -9187,7 +9187,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "indexing:307",
+        "setup_cache_key": "indexing:308",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -9357,7 +9357,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "77b9127d2d682aeb06a7c92d485f73d3e92a1d0c25807ae096fd326645e39056",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.NumericSeriesIndexing.time_getitem_list_like": {
         "code": "class NumericSeriesIndexing:\n    def time_getitem_list_like(self, index, index_structure):\n        self.data[[800000]]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumericSeriesIndexing:\n    def setup(self, index, index_structure):\n        N = 10 ** 6\n        indices = {\n            \"unique_monotonic_inc\": index(range(N)),\n            \"nonunique_monotonic_inc\": index(\n                list(range(55)) + [54] + list(range(55, N - 1))\n            ),\n        }\n        self.data = Series(np.random.rand(N), index=indices[index_structure])\n        self.array = np.arange(10000)\n        self.array_list = self.array.tolist()",
@@ -9386,7 +9386,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "f8e37095435d821079b740199f475e8cbd47ca1fe0001ab23250ace420c03655",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.NumericSeriesIndexing.time_getitem_lists": {
         "code": "class NumericSeriesIndexing:\n    def time_getitem_lists(self, index, index_structure):\n        self.data[self.array_list]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumericSeriesIndexing:\n    def setup(self, index, index_structure):\n        N = 10 ** 6\n        indices = {\n            \"unique_monotonic_inc\": index(range(N)),\n            \"nonunique_monotonic_inc\": index(\n                list(range(55)) + [54] + list(range(55, N - 1))\n            ),\n        }\n        self.data = Series(np.random.rand(N), index=indices[index_structure])\n        self.array = np.arange(10000)\n        self.array_list = self.array.tolist()",
@@ -9415,7 +9415,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "8f1517197693913854e3b0cb8d6218c432c709d7940948c9ca27aa8b8f559696",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.NumericSeriesIndexing.time_getitem_scalar": {
         "code": "class NumericSeriesIndexing:\n    def time_getitem_scalar(self, index, index_structure):\n        self.data[800000]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumericSeriesIndexing:\n    def setup(self, index, index_structure):\n        N = 10 ** 6\n        indices = {\n            \"unique_monotonic_inc\": index(range(N)),\n            \"nonunique_monotonic_inc\": index(\n                list(range(55)) + [54] + list(range(55, N - 1))\n            ),\n        }\n        self.data = Series(np.random.rand(N), index=indices[index_structure])\n        self.array = np.arange(10000)\n        self.array_list = self.array.tolist()",
@@ -9444,7 +9444,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "1343f6259c35b93da7907f754f409f52834255bfd66f1ae9b8584f0a1abbabc6",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.NumericSeriesIndexing.time_getitem_slice": {
         "code": "class NumericSeriesIndexing:\n    def time_getitem_slice(self, index, index_structure):\n        self.data[:800000]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumericSeriesIndexing:\n    def setup(self, index, index_structure):\n        N = 10 ** 6\n        indices = {\n            \"unique_monotonic_inc\": index(range(N)),\n            \"nonunique_monotonic_inc\": index(\n                list(range(55)) + [54] + list(range(55, N - 1))\n            ),\n        }\n        self.data = Series(np.random.rand(N), index=indices[index_structure])\n        self.array = np.arange(10000)\n        self.array_list = self.array.tolist()",
@@ -9473,7 +9473,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "1a781acc9b491a86260023d36bca1895c83ff1d79e28d7ed91efd2cfde6f9903",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.NumericSeriesIndexing.time_iloc_array": {
         "code": "class NumericSeriesIndexing:\n    def time_iloc_array(self, index, index_structure):\n        self.data.iloc[self.array]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumericSeriesIndexing:\n    def setup(self, index, index_structure):\n        N = 10 ** 6\n        indices = {\n            \"unique_monotonic_inc\": index(range(N)),\n            \"nonunique_monotonic_inc\": index(\n                list(range(55)) + [54] + list(range(55, N - 1))\n            ),\n        }\n        self.data = Series(np.random.rand(N), index=indices[index_structure])\n        self.array = np.arange(10000)\n        self.array_list = self.array.tolist()",
@@ -9502,7 +9502,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "378604259c6cd2a9a45e2f3cf873bfaa6c1750f3067d6fb1acf78ed790e3806d",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.NumericSeriesIndexing.time_iloc_list_like": {
         "code": "class NumericSeriesIndexing:\n    def time_iloc_list_like(self, index, index_structure):\n        self.data.iloc[[800000]]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumericSeriesIndexing:\n    def setup(self, index, index_structure):\n        N = 10 ** 6\n        indices = {\n            \"unique_monotonic_inc\": index(range(N)),\n            \"nonunique_monotonic_inc\": index(\n                list(range(55)) + [54] + list(range(55, N - 1))\n            ),\n        }\n        self.data = Series(np.random.rand(N), index=indices[index_structure])\n        self.array = np.arange(10000)\n        self.array_list = self.array.tolist()",
@@ -9531,7 +9531,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "65e176c5f9a18ba75babd0469a8fc8bab38511dded47836e64a458a7a5adb70e",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.NumericSeriesIndexing.time_iloc_scalar": {
         "code": "class NumericSeriesIndexing:\n    def time_iloc_scalar(self, index, index_structure):\n        self.data.iloc[800000]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumericSeriesIndexing:\n    def setup(self, index, index_structure):\n        N = 10 ** 6\n        indices = {\n            \"unique_monotonic_inc\": index(range(N)),\n            \"nonunique_monotonic_inc\": index(\n                list(range(55)) + [54] + list(range(55, N - 1))\n            ),\n        }\n        self.data = Series(np.random.rand(N), index=indices[index_structure])\n        self.array = np.arange(10000)\n        self.array_list = self.array.tolist()",
@@ -9560,7 +9560,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "36c6da9a494a23e24965cae7ac630fbda4685f006039b4f742d3629c2711f1c3",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.NumericSeriesIndexing.time_iloc_slice": {
         "code": "class NumericSeriesIndexing:\n    def time_iloc_slice(self, index, index_structure):\n        self.data.iloc[:800000]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumericSeriesIndexing:\n    def setup(self, index, index_structure):\n        N = 10 ** 6\n        indices = {\n            \"unique_monotonic_inc\": index(range(N)),\n            \"nonunique_monotonic_inc\": index(\n                list(range(55)) + [54] + list(range(55, N - 1))\n            ),\n        }\n        self.data = Series(np.random.rand(N), index=indices[index_structure])\n        self.array = np.arange(10000)\n        self.array_list = self.array.tolist()",
@@ -9589,7 +9589,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "610b98ee410cd2c4afbd06f09646188860748e7949fa023aefe13fe46245579d",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.NumericSeriesIndexing.time_loc_array": {
         "code": "class NumericSeriesIndexing:\n    def time_loc_array(self, index, index_structure):\n        self.data.loc[self.array]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumericSeriesIndexing:\n    def setup(self, index, index_structure):\n        N = 10 ** 6\n        indices = {\n            \"unique_monotonic_inc\": index(range(N)),\n            \"nonunique_monotonic_inc\": index(\n                list(range(55)) + [54] + list(range(55, N - 1))\n            ),\n        }\n        self.data = Series(np.random.rand(N), index=indices[index_structure])\n        self.array = np.arange(10000)\n        self.array_list = self.array.tolist()",
@@ -9618,7 +9618,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "49f6173e5e54f37ab17a1a012feeb68cbbd9e29254b07ca9380d2427d261c3ac",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.NumericSeriesIndexing.time_loc_list_like": {
         "code": "class NumericSeriesIndexing:\n    def time_loc_list_like(self, index, index_structure):\n        self.data.loc[[800000]]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumericSeriesIndexing:\n    def setup(self, index, index_structure):\n        N = 10 ** 6\n        indices = {\n            \"unique_monotonic_inc\": index(range(N)),\n            \"nonunique_monotonic_inc\": index(\n                list(range(55)) + [54] + list(range(55, N - 1))\n            ),\n        }\n        self.data = Series(np.random.rand(N), index=indices[index_structure])\n        self.array = np.arange(10000)\n        self.array_list = self.array.tolist()",
@@ -9647,7 +9647,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "f7d2327865b6beb9c9b578f295abeae6860c73e8c64b27e2f6e085153b5fb55e",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.NumericSeriesIndexing.time_loc_scalar": {
         "code": "class NumericSeriesIndexing:\n    def time_loc_scalar(self, index, index_structure):\n        self.data.loc[800000]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumericSeriesIndexing:\n    def setup(self, index, index_structure):\n        N = 10 ** 6\n        indices = {\n            \"unique_monotonic_inc\": index(range(N)),\n            \"nonunique_monotonic_inc\": index(\n                list(range(55)) + [54] + list(range(55, N - 1))\n            ),\n        }\n        self.data = Series(np.random.rand(N), index=indices[index_structure])\n        self.array = np.arange(10000)\n        self.array_list = self.array.tolist()",
@@ -9676,7 +9676,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "38308681a480fa47e62206aeebcec5a94044528ecd22d1fbb0712730696d262f",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.NumericSeriesIndexing.time_loc_slice": {
         "code": "class NumericSeriesIndexing:\n    def time_loc_slice(self, index, index_structure):\n        self.data.loc[:800000]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumericSeriesIndexing:\n    def setup(self, index, index_structure):\n        N = 10 ** 6\n        indices = {\n            \"unique_monotonic_inc\": index(range(N)),\n            \"nonunique_monotonic_inc\": index(\n                list(range(55)) + [54] + list(range(55, N - 1))\n            ),\n        }\n        self.data = Series(np.random.rand(N), index=indices[index_structure])\n        self.array = np.arange(10000)\n        self.array_list = self.array.tolist()",
@@ -9705,7 +9705,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "a895c9452d52fa5232868b7fb5f24fd0a7076b5086805a7467045327f3ce9b77",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.Take.time_take": {
         "code": "class Take:\n    def time_take(self, index):\n        self.s.take(self.indexer)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Take:\n    def setup(self, index):\n        N = 100000\n        indexes = {\n            \"int\": Int64Index(np.arange(N)),\n            \"datetime\": date_range(\"2011-01-01\", freq=\"S\", periods=N),\n        }\n        index = indexes[index]\n        self.s = Series(np.random.rand(N), index=index)\n        self.indexer = np.random.randint(0, N, size=N)",
