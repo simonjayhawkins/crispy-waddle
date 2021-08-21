@@ -8129,7 +8129,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "621e9e811353196bda4f9b910227b25c2025f73979193fb9465713f7ca15c389",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "index_object.Indexing.time_boolean_series": {
         "code": "class Indexing:\n    def time_boolean_series(self, dtype):\n        self.idx[self.series_mask]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Indexing:\n    def setup(self, dtype):\n        N = 10 ** 6\n        self.idx = getattr(tm, f\"make{dtype}Index\")(N)\n        self.array_mask = (np.arange(N) % 3) == 0\n        self.series_mask = Series(self.array_mask)\n        self.sorted = self.idx.sort_values()\n        half = N // 2\n        self.non_unique = self.idx[:half].append(self.idx[:half])\n        self.non_unique_sorted = (\n            self.sorted[:half].append(self.sorted[:half]).sort_values()\n        )\n        self.key = self.sorted[N // 4]",
@@ -8153,7 +8153,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "de5f2e357f26a203081f4adf0f3535ae4a0576ffc6d640c1eb04d403acf10897",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "index_object.Indexing.time_get": {
         "code": "class Indexing:\n    def time_get(self, dtype):\n        self.idx[1]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Indexing:\n    def setup(self, dtype):\n        N = 10 ** 6\n        self.idx = getattr(tm, f\"make{dtype}Index\")(N)\n        self.array_mask = (np.arange(N) % 3) == 0\n        self.series_mask = Series(self.array_mask)\n        self.sorted = self.idx.sort_values()\n        half = N // 2\n        self.non_unique = self.idx[:half].append(self.idx[:half])\n        self.non_unique_sorted = (\n            self.sorted[:half].append(self.sorted[:half]).sort_values()\n        )\n        self.key = self.sorted[N // 4]",
@@ -8177,7 +8177,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "79d5599b3adf46ceac71b1c82a1fd34fa3f446bbaec8ff1f585c049d0b7d3009",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "index_object.Indexing.time_get_loc": {
         "code": "class Indexing:\n    def time_get_loc(self, dtype):\n        self.idx.get_loc(self.key)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Indexing:\n    def setup(self, dtype):\n        N = 10 ** 6\n        self.idx = getattr(tm, f\"make{dtype}Index\")(N)\n        self.array_mask = (np.arange(N) % 3) == 0\n        self.series_mask = Series(self.array_mask)\n        self.sorted = self.idx.sort_values()\n        half = N // 2\n        self.non_unique = self.idx[:half].append(self.idx[:half])\n        self.non_unique_sorted = (\n            self.sorted[:half].append(self.sorted[:half]).sort_values()\n        )\n        self.key = self.sorted[N // 4]",
@@ -8201,7 +8201,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "b72a7de96e2d56a60414b74d417fcb2729a648cba6876b974b6533bee8d5fac7",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "index_object.Indexing.time_get_loc_non_unique": {
         "code": "class Indexing:\n    def time_get_loc_non_unique(self, dtype):\n        self.non_unique.get_loc(self.key)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Indexing:\n    def setup(self, dtype):\n        N = 10 ** 6\n        self.idx = getattr(tm, f\"make{dtype}Index\")(N)\n        self.array_mask = (np.arange(N) % 3) == 0\n        self.series_mask = Series(self.array_mask)\n        self.sorted = self.idx.sort_values()\n        half = N // 2\n        self.non_unique = self.idx[:half].append(self.idx[:half])\n        self.non_unique_sorted = (\n            self.sorted[:half].append(self.sorted[:half]).sort_values()\n        )\n        self.key = self.sorted[N // 4]",
@@ -8225,7 +8225,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "673e5622b2b87001251131e97cc72ea530f81edc82a12fbd649082b9451e2b6a",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "index_object.Indexing.time_get_loc_non_unique_sorted": {
         "code": "class Indexing:\n    def time_get_loc_non_unique_sorted(self, dtype):\n        self.non_unique_sorted.get_loc(self.key)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Indexing:\n    def setup(self, dtype):\n        N = 10 ** 6\n        self.idx = getattr(tm, f\"make{dtype}Index\")(N)\n        self.array_mask = (np.arange(N) % 3) == 0\n        self.series_mask = Series(self.array_mask)\n        self.sorted = self.idx.sort_values()\n        half = N // 2\n        self.non_unique = self.idx[:half].append(self.idx[:half])\n        self.non_unique_sorted = (\n            self.sorted[:half].append(self.sorted[:half]).sort_values()\n        )\n        self.key = self.sorted[N // 4]",
@@ -8249,7 +8249,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "a4836dd7b96631197d722a28be5ed174e994246d3a79e3bf180ad7d42e4b1228",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "index_object.Indexing.time_get_loc_sorted": {
         "code": "class Indexing:\n    def time_get_loc_sorted(self, dtype):\n        self.sorted.get_loc(self.key)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Indexing:\n    def setup(self, dtype):\n        N = 10 ** 6\n        self.idx = getattr(tm, f\"make{dtype}Index\")(N)\n        self.array_mask = (np.arange(N) % 3) == 0\n        self.series_mask = Series(self.array_mask)\n        self.sorted = self.idx.sort_values()\n        half = N // 2\n        self.non_unique = self.idx[:half].append(self.idx[:half])\n        self.non_unique_sorted = (\n            self.sorted[:half].append(self.sorted[:half]).sort_values()\n        )\n        self.key = self.sorted[N // 4]",
@@ -8273,7 +8273,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "9e8795c5f15a5514c0d4e09ac821d4ef56284f81af33f006336c605d4c11fba7",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "index_object.Indexing.time_slice": {
         "code": "class Indexing:\n    def time_slice(self, dtype):\n        self.idx[:-1]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Indexing:\n    def setup(self, dtype):\n        N = 10 ** 6\n        self.idx = getattr(tm, f\"make{dtype}Index\")(N)\n        self.array_mask = (np.arange(N) % 3) == 0\n        self.series_mask = Series(self.array_mask)\n        self.sorted = self.idx.sort_values()\n        half = N // 2\n        self.non_unique = self.idx[:half].append(self.idx[:half])\n        self.non_unique_sorted = (\n            self.sorted[:half].append(self.sorted[:half]).sort_values()\n        )\n        self.key = self.sorted[N // 4]",
@@ -8297,7 +8297,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "03a8970b67dfa97d7eb8b48c0b3c1c5833d7d84afbdd7de0a02c0b1133c100ab",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "index_object.Indexing.time_slice_step": {
         "code": "class Indexing:\n    def time_slice_step(self, dtype):\n        self.idx[::2]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Indexing:\n    def setup(self, dtype):\n        N = 10 ** 6\n        self.idx = getattr(tm, f\"make{dtype}Index\")(N)\n        self.array_mask = (np.arange(N) % 3) == 0\n        self.series_mask = Series(self.array_mask)\n        self.sorted = self.idx.sort_values()\n        half = N // 2\n        self.non_unique = self.idx[:half].append(self.idx[:half])\n        self.non_unique_sorted = (\n            self.sorted[:half].append(self.sorted[:half]).sort_values()\n        )\n        self.key = self.sorted[N // 4]",
@@ -8321,7 +8321,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "16074701d8120b0bc349b7c9d32ffbf25967ef3ec90e104be83c20ec5a8d332a",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "index_object.IntervalIndexMethod.time_intersection": {
         "code": "class IntervalIndexMethod:\n    def time_intersection(self, N):\n        self.left.intersection(self.right)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass IntervalIndexMethod:\n    def setup(self, N):\n        left = np.append(np.arange(N), np.array(0))\n        right = np.append(np.arange(1, N + 1), np.array(1))\n        self.intv = IntervalIndex.from_arrays(left, right)\n        self.intv._engine\n    \n        self.intv2 = IntervalIndex.from_arrays(left + 1, right + 1)\n        self.intv2._engine\n    \n        self.left = IntervalIndex.from_breaks(np.arange(N))\n        self.right = IntervalIndex.from_breaks(np.arange(N - 3, 2 * N - 3))",
