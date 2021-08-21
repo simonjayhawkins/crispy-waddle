@@ -4519,7 +4519,7 @@
         "warmup_time": -1
     },
     "frame_methods.Interpolate.time_interpolate": {
-        "code": "class Interpolate:\n    def time_interpolate(self, downcast):\n        self.df.interpolate(downcast=downcast)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Interpolate:\n    def setup(self, downcast):\n        N = 10000\n        # this is the worst case, where every column has NaNs.\n        self.df = DataFrame(np.random.randn(N, 100))\n        self.df.values[::2] = np.nan\n    \n        self.df2 = DataFrame(\n            {\n                \"A\": np.arange(0, N),\n                \"B\": np.random.randint(0, 100, N),\n                \"C\": np.random.randn(N),\n                \"D\": np.random.randn(N),\n            }\n        )\n        self.df2.loc[1::5, \"A\"] = np.nan\n        self.df2.loc[1::5, \"C\"] = np.nan",
+        "code": "class Interpolate:\n    def time_interpolate(self, downcast):\n        self.df.interpolate(downcast=downcast)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Interpolate:\n    def setup(self, downcast):\n        N = 10000\n        # this is the worst case, where every column has NaNs.\n        arr = np.random.randn(N, 100)\n        # NB: we need to set values in array, not in df.values, otherwise\n        #  the benchmark will be misleading for ArrayManager\n        arr[::2] = np.nan\n    \n        self.df = DataFrame(arr)\n    \n        self.df2 = DataFrame(\n            {\n                \"A\": np.arange(0, N),\n                \"B\": np.random.randint(0, 100, N),\n                \"C\": np.random.randn(N),\n                \"D\": np.random.randn(N),\n            }\n        )\n        self.df2.loc[1::5, \"A\"] = np.nan\n        self.df2.loc[1::5, \"C\"] = np.nan",
         "min_run_count": 2,
         "name": "frame_methods.Interpolate.time_interpolate",
         "number": 0,
@@ -4538,11 +4538,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "4b928f7a79c9835976b403618626454cdc80c21d09e08bb25ea3e1db1ab73d5d",
+        "version": "772e1716ebd0b46c5a1414657afc3917f5a8ea0f258df3ea3261ce0eaf02ee55",
         "warmup_time": -1
     },
     "frame_methods.Interpolate.time_interpolate_some_good": {
-        "code": "class Interpolate:\n    def time_interpolate_some_good(self, downcast):\n        self.df2.interpolate(downcast=downcast)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Interpolate:\n    def setup(self, downcast):\n        N = 10000\n        # this is the worst case, where every column has NaNs.\n        self.df = DataFrame(np.random.randn(N, 100))\n        self.df.values[::2] = np.nan\n    \n        self.df2 = DataFrame(\n            {\n                \"A\": np.arange(0, N),\n                \"B\": np.random.randint(0, 100, N),\n                \"C\": np.random.randn(N),\n                \"D\": np.random.randn(N),\n            }\n        )\n        self.df2.loc[1::5, \"A\"] = np.nan\n        self.df2.loc[1::5, \"C\"] = np.nan",
+        "code": "class Interpolate:\n    def time_interpolate_some_good(self, downcast):\n        self.df2.interpolate(downcast=downcast)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Interpolate:\n    def setup(self, downcast):\n        N = 10000\n        # this is the worst case, where every column has NaNs.\n        arr = np.random.randn(N, 100)\n        # NB: we need to set values in array, not in df.values, otherwise\n        #  the benchmark will be misleading for ArrayManager\n        arr[::2] = np.nan\n    \n        self.df = DataFrame(arr)\n    \n        self.df2 = DataFrame(\n            {\n                \"A\": np.arange(0, N),\n                \"B\": np.random.randint(0, 100, N),\n                \"C\": np.random.randn(N),\n                \"D\": np.random.randn(N),\n            }\n        )\n        self.df2.loc[1::5, \"A\"] = np.nan\n        self.df2.loc[1::5, \"C\"] = np.nan",
         "min_run_count": 2,
         "name": "frame_methods.Interpolate.time_interpolate_some_good",
         "number": 0,
@@ -4561,7 +4561,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "071676fb895adae558ef0f3d812967f876c29557965de723c0969cce756a7124",
+        "version": "815fbe5f668a27ab8708fc47157cc8edac28bf78e7cfc2776ef6a1c5c73832ae",
         "warmup_time": -1
     },
     "frame_methods.Isnull.time_isnull": {
@@ -6722,14 +6722,15 @@
         "warmup_time": -1
     },
     "groupby.GroupByMethods.time_dtype_as_field": {
-        "code": "class GroupByMethods:\n    def time_dtype_as_field(self, dtype, method, application):\n        self.as_field_method()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass GroupByMethods:\n    def setup(self, dtype, method, application):\n        if method in method_blocklist.get(dtype, {}):\n            raise NotImplementedError  # skip benchmark\n        ngroups = 1000\n        size = ngroups * 2\n        rng = np.arange(ngroups)\n        values = rng.take(np.random.randint(0, ngroups, size=size))\n        if dtype == \"int\":\n            key = np.random.randint(0, size, size=size)\n        elif dtype == \"uint\":\n            key = np.random.randint(0, size, size=size, dtype=dtype)\n        elif dtype == \"float\":\n            key = np.concatenate(\n                [np.random.random(ngroups) * 0.1, np.random.random(ngroups) * 10.0]\n            )\n        elif dtype == \"object\":\n            key = [\"foo\"] * size\n        elif dtype == \"datetime\":\n            key = date_range(\"1/1/2011\", periods=size, freq=\"s\")\n    \n        df = DataFrame({\"values\": values, \"key\": key})\n    \n        if application == \"transform\":\n            if method == \"describe\":\n                raise NotImplementedError\n    \n            self.as_group_method = lambda: df.groupby(\"key\")[\"values\"].transform(method)\n            self.as_field_method = lambda: df.groupby(\"values\")[\"key\"].transform(method)\n        else:\n            self.as_group_method = getattr(df.groupby(\"key\")[\"values\"], method)\n            self.as_field_method = getattr(df.groupby(\"values\")[\"key\"], method)",
+        "code": "class GroupByMethods:\n    def time_dtype_as_field(self, dtype, method, application, ncols):\n        self.as_field_method()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass GroupByMethods:\n    def setup(self, dtype, method, application, ncols):\n        if method in method_blocklist.get(dtype, {}):\n            raise NotImplementedError  # skip benchmark\n    \n        if ncols != 1 and method in [\"value_counts\", \"unique\"]:\n            # DataFrameGroupBy doesn't have these methods\n            raise NotImplementedError\n    \n        ngroups = 1000\n        size = ngroups * 2\n        rng = np.arange(ngroups).reshape(-1, 1)\n        rng = np.broadcast_to(rng, (len(rng), ncols))\n        taker = np.random.randint(0, ngroups, size=size)\n        values = rng.take(taker, axis=0)\n        if dtype == \"int\":\n            key = np.random.randint(0, size, size=size)\n        elif dtype == \"uint\":\n            key = np.random.randint(0, size, size=size, dtype=dtype)\n        elif dtype == \"float\":\n            key = np.concatenate(\n                [np.random.random(ngroups) * 0.1, np.random.random(ngroups) * 10.0]\n            )\n        elif dtype == \"object\":\n            key = [\"foo\"] * size\n        elif dtype == \"datetime\":\n            key = date_range(\"1/1/2011\", periods=size, freq=\"s\")\n    \n        cols = [f\"values{n}\" for n in range(ncols)]\n        df = DataFrame(values, columns=cols)\n        df[\"key\"] = key\n    \n        if len(cols) == 1:\n            cols = cols[0]\n    \n        if application == \"transform\":\n            if method == \"describe\":\n                raise NotImplementedError\n    \n            self.as_group_method = lambda: df.groupby(\"key\")[cols].transform(method)\n            self.as_field_method = lambda: df.groupby(cols)[\"key\"].transform(method)\n        else:\n            self.as_group_method = getattr(df.groupby(\"key\")[cols], method)\n            self.as_field_method = getattr(df.groupby(cols)[\"key\"], method)",
         "min_run_count": 2,
         "name": "groupby.GroupByMethods.time_dtype_as_field",
         "number": 0,
         "param_names": [
             "dtype",
             "method",
-            "application"
+            "application",
+            "ncols"
         ],
         "params": [
             [
@@ -6778,6 +6779,12 @@
             [
                 "'direct'",
                 "'transformation'"
+            ],
+            [
+                "1",
+                "2",
+                "5",
+                "10"
             ]
         ],
         "repeat": 0,
@@ -6786,18 +6793,19 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "2e5821366457ad7dec8094df470d49f3ff4f7aa84ab0e701e0e8af952e1d872c",
+        "version": "5ea7cd12f5f2450b503062738f058e0c3486677a8db09522816f84609d0b612a",
         "warmup_time": -1
     },
     "groupby.GroupByMethods.time_dtype_as_group": {
-        "code": "class GroupByMethods:\n    def time_dtype_as_group(self, dtype, method, application):\n        self.as_group_method()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass GroupByMethods:\n    def setup(self, dtype, method, application):\n        if method in method_blocklist.get(dtype, {}):\n            raise NotImplementedError  # skip benchmark\n        ngroups = 1000\n        size = ngroups * 2\n        rng = np.arange(ngroups)\n        values = rng.take(np.random.randint(0, ngroups, size=size))\n        if dtype == \"int\":\n            key = np.random.randint(0, size, size=size)\n        elif dtype == \"uint\":\n            key = np.random.randint(0, size, size=size, dtype=dtype)\n        elif dtype == \"float\":\n            key = np.concatenate(\n                [np.random.random(ngroups) * 0.1, np.random.random(ngroups) * 10.0]\n            )\n        elif dtype == \"object\":\n            key = [\"foo\"] * size\n        elif dtype == \"datetime\":\n            key = date_range(\"1/1/2011\", periods=size, freq=\"s\")\n    \n        df = DataFrame({\"values\": values, \"key\": key})\n    \n        if application == \"transform\":\n            if method == \"describe\":\n                raise NotImplementedError\n    \n            self.as_group_method = lambda: df.groupby(\"key\")[\"values\"].transform(method)\n            self.as_field_method = lambda: df.groupby(\"values\")[\"key\"].transform(method)\n        else:\n            self.as_group_method = getattr(df.groupby(\"key\")[\"values\"], method)\n            self.as_field_method = getattr(df.groupby(\"values\")[\"key\"], method)",
+        "code": "class GroupByMethods:\n    def time_dtype_as_group(self, dtype, method, application, ncols):\n        self.as_group_method()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass GroupByMethods:\n    def setup(self, dtype, method, application, ncols):\n        if method in method_blocklist.get(dtype, {}):\n            raise NotImplementedError  # skip benchmark\n    \n        if ncols != 1 and method in [\"value_counts\", \"unique\"]:\n            # DataFrameGroupBy doesn't have these methods\n            raise NotImplementedError\n    \n        ngroups = 1000\n        size = ngroups * 2\n        rng = np.arange(ngroups).reshape(-1, 1)\n        rng = np.broadcast_to(rng, (len(rng), ncols))\n        taker = np.random.randint(0, ngroups, size=size)\n        values = rng.take(taker, axis=0)\n        if dtype == \"int\":\n            key = np.random.randint(0, size, size=size)\n        elif dtype == \"uint\":\n            key = np.random.randint(0, size, size=size, dtype=dtype)\n        elif dtype == \"float\":\n            key = np.concatenate(\n                [np.random.random(ngroups) * 0.1, np.random.random(ngroups) * 10.0]\n            )\n        elif dtype == \"object\":\n            key = [\"foo\"] * size\n        elif dtype == \"datetime\":\n            key = date_range(\"1/1/2011\", periods=size, freq=\"s\")\n    \n        cols = [f\"values{n}\" for n in range(ncols)]\n        df = DataFrame(values, columns=cols)\n        df[\"key\"] = key\n    \n        if len(cols) == 1:\n            cols = cols[0]\n    \n        if application == \"transform\":\n            if method == \"describe\":\n                raise NotImplementedError\n    \n            self.as_group_method = lambda: df.groupby(\"key\")[cols].transform(method)\n            self.as_field_method = lambda: df.groupby(cols)[\"key\"].transform(method)\n        else:\n            self.as_group_method = getattr(df.groupby(\"key\")[cols], method)\n            self.as_field_method = getattr(df.groupby(cols)[\"key\"], method)",
         "min_run_count": 2,
         "name": "groupby.GroupByMethods.time_dtype_as_group",
         "number": 0,
         "param_names": [
             "dtype",
             "method",
-            "application"
+            "application",
+            "ncols"
         ],
         "params": [
             [
@@ -6846,6 +6854,12 @@
             [
                 "'direct'",
                 "'transformation'"
+            ],
+            [
+                "1",
+                "2",
+                "5",
+                "10"
             ]
         ],
         "repeat": 0,
@@ -6854,7 +6868,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "f1c5c93cb08e5c79fa3f5bda8dbbd9d0248bd3f1183f3b219e5c5fa4d7a184bb",
+        "version": "de1a3fd6713ac1958b0b2e8ddcd8bd0cf3b8986667886395e023663a956d0167",
         "warmup_time": -1
     },
     "groupby.GroupManyLabels.time_sum": {
@@ -9061,7 +9075,7 @@
         "warmup_time": -1
     },
     "indexing.InsertColumns.time_assign_list_like_with_setitem": {
-        "code": "class InsertColumns:\n    def time_assign_list_like_with_setitem(self):\n        self.df[list(range(100))] = np.random.randn(self.N, 100)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))",
+        "code": "class InsertColumns:\n    def time_assign_list_like_with_setitem(self):\n        self.df[list(range(100))] = np.random.randn(self.N, 100)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))\n        self.df2 = DataFrame(np.random.randn(self.N, 2))",
         "min_run_count": 2,
         "name": "indexing.InsertColumns.time_assign_list_like_with_setitem",
         "number": 0,
@@ -9073,11 +9087,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "f5c977a84b67c7bc7e089e88b954203a2fc418585fcc4bf2a8ae28a56265f8ce",
+        "version": "f0d20ae0b7ecbf875b6212af9100e57c2d7a858d5391e0335ad66af6913bbf27",
         "warmup_time": -1
     },
     "indexing.InsertColumns.time_assign_list_of_columns_concat": {
-        "code": "class InsertColumns:\n    def time_assign_list_of_columns_concat(self):\n        df = DataFrame(np.random.randn(self.N, 100))\n        concat([self.df, df], axis=1)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))",
+        "code": "class InsertColumns:\n    def time_assign_list_of_columns_concat(self):\n        df = DataFrame(np.random.randn(self.N, 100))\n        concat([self.df, df], axis=1)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))\n        self.df2 = DataFrame(np.random.randn(self.N, 2))",
         "min_run_count": 2,
         "name": "indexing.InsertColumns.time_assign_list_of_columns_concat",
         "number": 0,
@@ -9089,11 +9103,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "c5436fc343cc9bcf0b460139b8a82685b5d71c4b101064f10728e9ece018f2b4",
+        "version": "6488498fda2f541b42e29ae2312eb8b360958157a907be27ddf5b34c0161a937",
         "warmup_time": -1
     },
     "indexing.InsertColumns.time_assign_with_setitem": {
-        "code": "class InsertColumns:\n    def time_assign_with_setitem(self):\n        for i in range(100):\n            self.df[i] = np.random.randn(self.N)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))",
+        "code": "class InsertColumns:\n    def time_assign_with_setitem(self):\n        for i in range(100):\n            self.df[i] = np.random.randn(self.N)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))\n        self.df2 = DataFrame(np.random.randn(self.N, 2))",
         "min_run_count": 2,
         "name": "indexing.InsertColumns.time_assign_with_setitem",
         "number": 0,
@@ -9105,11 +9119,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "444ec09c04aff55bcc0bb7c588f08c222ef3a780a4df03da7ee3c30431d98c73",
+        "version": "d9df947877603c72bff457f468a97b02417e92607d132780d6b770f71ccd5508",
         "warmup_time": -1
     },
     "indexing.InsertColumns.time_insert": {
-        "code": "class InsertColumns:\n    def time_insert(self):\n        for i in range(100):\n            self.df.insert(0, i, np.random.randn(self.N), allow_duplicates=True)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))",
+        "code": "class InsertColumns:\n    def time_insert(self):\n        for i in range(100):\n            self.df.insert(0, i, np.random.randn(self.N), allow_duplicates=True)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))\n        self.df2 = DataFrame(np.random.randn(self.N, 2))",
         "min_run_count": 2,
         "name": "indexing.InsertColumns.time_insert",
         "number": 0,
@@ -9121,7 +9135,23 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "95d1b5bc84a07a8661e73ea56178db44f5b93d5a196be3f24ae024c9bec55af2",
+        "version": "c675f1a116c9426fda23d329fa7028edc751ccc723eb90e0ac0a9fd5737d1e9e",
+        "warmup_time": -1
+    },
+    "indexing.InsertColumns.time_insert_middle": {
+        "code": "class InsertColumns:\n    def time_insert_middle(self):\n        # same as time_insert but inserting to a middle column rather than\n        #  front or back (which have fast-paths)\n        for i in range(100):\n            self.df2.insert(\n                1, \"colname\", np.random.randn(self.N), allow_duplicates=True\n            )\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass InsertColumns:\n    def setup(self):\n        self.N = 10 ** 3\n        self.df = DataFrame(index=range(self.N))\n        self.df2 = DataFrame(np.random.randn(self.N, 2))",
+        "min_run_count": 2,
+        "name": "indexing.InsertColumns.time_insert_middle",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "0682502ad9f0ccf074a147a9f6d4babd27f606e4ad4c6293f39973b96af77470",
         "warmup_time": -1
     },
     "indexing.IntervalIndexing.time_getitem_list": {
@@ -11703,34 +11733,6 @@
         "unit": "bytes",
         "version": "adf4b554b5c93e0245cb16f1618401622f82bce472f2397fa6d81ca620c40bed"
     },
-    "io.json.ToJSON.peakmem_to_json_wide": {
-        "code": "class ToJSON:\n    def peakmem_to_json_wide(self, orient, frame):\n        base_df = getattr(self, frame).copy()\n        df = concat([base_df.iloc[:100]] * 1000, ignore_index=True, axis=1)\n        df.to_json(self.fname, orient=orient)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass ToJSON:\n    def setup(self, orient, frame):\n        N = 10 ** 5\n        ncols = 5\n        index = date_range(\"20000101\", periods=N, freq=\"H\")\n        timedeltas = timedelta_range(start=1, periods=N, freq=\"s\")\n        datetimes = date_range(start=1, periods=N, freq=\"s\")\n        ints = np.random.randint(100000000, size=N)\n        longints = sys.maxsize * np.random.randint(100000000, size=N)\n        floats = np.random.randn(N)\n        strings = tm.makeStringIndex(N)\n        self.df = DataFrame(np.random.randn(N, ncols), index=np.arange(N))\n        self.df_date_idx = DataFrame(np.random.randn(N, ncols), index=index)\n        self.df_td_int_ts = DataFrame(\n            {\n                \"td_1\": timedeltas,\n                \"td_2\": timedeltas,\n                \"int_1\": ints,\n                \"int_2\": ints,\n                \"ts_1\": datetimes,\n                \"ts_2\": datetimes,\n            },\n            index=index,\n        )\n        self.df_int_floats = DataFrame(\n            {\n                \"int_1\": ints,\n                \"int_2\": ints,\n                \"int_3\": ints,\n                \"float_1\": floats,\n                \"float_2\": floats,\n                \"float_3\": floats,\n            },\n            index=index,\n        )\n        self.df_int_float_str = DataFrame(\n            {\n                \"int_1\": ints,\n                \"int_2\": ints,\n                \"float_1\": floats,\n                \"float_2\": floats,\n                \"str_1\": strings,\n                \"str_2\": strings,\n            },\n            index=index,\n        )\n    \n        self.df_longint_float_str = DataFrame(\n            {\n                \"longint_1\": longints,\n                \"longint_2\": longints,\n                \"float_1\": floats,\n                \"float_2\": floats,\n                \"str_1\": strings,\n                \"str_2\": strings,\n            },\n            index=index,\n        )",
-        "name": "io.json.ToJSON.peakmem_to_json_wide",
-        "param_names": [
-            "orient",
-            "frame"
-        ],
-        "params": [
-            [
-                "'split'",
-                "'columns'",
-                "'index'",
-                "'values'",
-                "'records'"
-            ],
-            [
-                "'df'",
-                "'df_date_idx'",
-                "'df_td_int_ts'",
-                "'df_int_floats'",
-                "'df_int_float_str'"
-            ]
-        ],
-        "timeout": 60.0,
-        "type": "peakmemory",
-        "unit": "bytes",
-        "version": "c770f1cf7c9d9207b70f263520f581b4ebd8965056c154c998f8cec3ce6c5e38"
-    },
     "io.json.ToJSON.time_to_json": {
         "code": "class ToJSON:\n    def time_to_json(self, orient, frame):\n        getattr(self, frame).to_json(self.fname, orient=orient)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass ToJSON:\n    def setup(self, orient, frame):\n        N = 10 ** 5\n        ncols = 5\n        index = date_range(\"20000101\", periods=N, freq=\"H\")\n        timedeltas = timedelta_range(start=1, periods=N, freq=\"s\")\n        datetimes = date_range(start=1, periods=N, freq=\"s\")\n        ints = np.random.randint(100000000, size=N)\n        longints = sys.maxsize * np.random.randint(100000000, size=N)\n        floats = np.random.randn(N)\n        strings = tm.makeStringIndex(N)\n        self.df = DataFrame(np.random.randn(N, ncols), index=np.arange(N))\n        self.df_date_idx = DataFrame(np.random.randn(N, ncols), index=index)\n        self.df_td_int_ts = DataFrame(\n            {\n                \"td_1\": timedeltas,\n                \"td_2\": timedeltas,\n                \"int_1\": ints,\n                \"int_2\": ints,\n                \"ts_1\": datetimes,\n                \"ts_2\": datetimes,\n            },\n            index=index,\n        )\n        self.df_int_floats = DataFrame(\n            {\n                \"int_1\": ints,\n                \"int_2\": ints,\n                \"int_3\": ints,\n                \"float_1\": floats,\n                \"float_2\": floats,\n                \"float_3\": floats,\n            },\n            index=index,\n        )\n        self.df_int_float_str = DataFrame(\n            {\n                \"int_1\": ints,\n                \"int_2\": ints,\n                \"float_1\": floats,\n                \"float_2\": floats,\n                \"str_1\": strings,\n                \"str_2\": strings,\n            },\n            index=index,\n        )\n    \n        self.df_longint_float_str = DataFrame(\n            {\n                \"longint_1\": longints,\n                \"longint_2\": longints,\n                \"float_1\": floats,\n                \"float_2\": floats,\n                \"str_1\": strings,\n                \"str_2\": strings,\n            },\n            index=index,\n        )",
         "min_run_count": 2,
@@ -11763,40 +11765,6 @@
         "type": "time",
         "unit": "seconds",
         "version": "101333f4d5654ae3ff583e1e6394be69e8b17514ccd32c8fde3b949b9b1305f1",
-        "warmup_time": -1
-    },
-    "io.json.ToJSON.time_to_json_wide": {
-        "code": "class ToJSON:\n    def time_to_json_wide(self, orient, frame):\n        base_df = getattr(self, frame).copy()\n        df = concat([base_df.iloc[:100]] * 1000, ignore_index=True, axis=1)\n        df.to_json(self.fname, orient=orient)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass ToJSON:\n    def setup(self, orient, frame):\n        N = 10 ** 5\n        ncols = 5\n        index = date_range(\"20000101\", periods=N, freq=\"H\")\n        timedeltas = timedelta_range(start=1, periods=N, freq=\"s\")\n        datetimes = date_range(start=1, periods=N, freq=\"s\")\n        ints = np.random.randint(100000000, size=N)\n        longints = sys.maxsize * np.random.randint(100000000, size=N)\n        floats = np.random.randn(N)\n        strings = tm.makeStringIndex(N)\n        self.df = DataFrame(np.random.randn(N, ncols), index=np.arange(N))\n        self.df_date_idx = DataFrame(np.random.randn(N, ncols), index=index)\n        self.df_td_int_ts = DataFrame(\n            {\n                \"td_1\": timedeltas,\n                \"td_2\": timedeltas,\n                \"int_1\": ints,\n                \"int_2\": ints,\n                \"ts_1\": datetimes,\n                \"ts_2\": datetimes,\n            },\n            index=index,\n        )\n        self.df_int_floats = DataFrame(\n            {\n                \"int_1\": ints,\n                \"int_2\": ints,\n                \"int_3\": ints,\n                \"float_1\": floats,\n                \"float_2\": floats,\n                \"float_3\": floats,\n            },\n            index=index,\n        )\n        self.df_int_float_str = DataFrame(\n            {\n                \"int_1\": ints,\n                \"int_2\": ints,\n                \"float_1\": floats,\n                \"float_2\": floats,\n                \"str_1\": strings,\n                \"str_2\": strings,\n            },\n            index=index,\n        )\n    \n        self.df_longint_float_str = DataFrame(\n            {\n                \"longint_1\": longints,\n                \"longint_2\": longints,\n                \"float_1\": floats,\n                \"float_2\": floats,\n                \"str_1\": strings,\n                \"str_2\": strings,\n            },\n            index=index,\n        )",
-        "min_run_count": 2,
-        "name": "io.json.ToJSON.time_to_json_wide",
-        "number": 0,
-        "param_names": [
-            "orient",
-            "frame"
-        ],
-        "params": [
-            [
-                "'split'",
-                "'columns'",
-                "'index'",
-                "'values'",
-                "'records'"
-            ],
-            [
-                "'df'",
-                "'df_date_idx'",
-                "'df_td_int_ts'",
-                "'df_int_floats'",
-                "'df_int_float_str'"
-            ]
-        ],
-        "repeat": 0,
-        "rounds": 2,
-        "sample_time": 0.01,
-        "timeout": 60.0,
-        "type": "time",
-        "unit": "seconds",
-        "version": "5a22e75ccd2ee2ce849052f7cdc8b5be034934bb458580e92dc7b630cd6934fa",
         "warmup_time": -1
     },
     "io.json.ToJSONISO.time_iso_format": {
@@ -11926,7 +11894,7 @@
         "name": "io.json.ToJSONMem.peakmem_float",
         "param_names": [],
         "params": [],
-        "setup_cache_key": "io.json:291",
+        "setup_cache_key": "io.json:295",
         "timeout": 60.0,
         "type": "peakmemory",
         "unit": "bytes",
@@ -11937,11 +11905,135 @@
         "name": "io.json.ToJSONMem.peakmem_int",
         "param_names": [],
         "params": [],
-        "setup_cache_key": "io.json:291",
+        "setup_cache_key": "io.json:295",
         "timeout": 60.0,
         "type": "peakmemory",
         "unit": "bytes",
         "version": "b9f6565999a24da1b2b0b5d21f3a3d6b94040657e615ea1287808b65451b9c27"
+    },
+    "io.json.ToJSONWide.peakmem_to_json": {
+        "code": "class ToJSON:\n    def peakmem_to_json(self, orient, frame):\n        getattr(self, frame).to_json(self.fname, orient=orient)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass ToJSONWide:\n    def setup(self, orient, frame):\n        super().setup(orient, frame)\n        base_df = getattr(self, frame).copy()\n        df_wide = concat([base_df.iloc[:100]] * 1000, ignore_index=True, axis=1)\n        self.df_wide = df_wide",
+        "name": "io.json.ToJSONWide.peakmem_to_json",
+        "param_names": [
+            "orient",
+            "frame"
+        ],
+        "params": [
+            [
+                "'split'",
+                "'columns'",
+                "'index'",
+                "'values'",
+                "'records'"
+            ],
+            [
+                "'df'",
+                "'df_date_idx'",
+                "'df_td_int_ts'",
+                "'df_int_floats'",
+                "'df_int_float_str'"
+            ]
+        ],
+        "timeout": 60.0,
+        "type": "peakmemory",
+        "unit": "bytes",
+        "version": "f179e468594888d4ad11b82d624fc4c3925d4831054986c7642b6a7938e395d8"
+    },
+    "io.json.ToJSONWide.peakmem_to_json_wide": {
+        "code": "class ToJSONWide:\n    def peakmem_to_json_wide(self, orient, frame):\n        self.df_wide.to_json(self.fname, orient=orient)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass ToJSONWide:\n    def setup(self, orient, frame):\n        super().setup(orient, frame)\n        base_df = getattr(self, frame).copy()\n        df_wide = concat([base_df.iloc[:100]] * 1000, ignore_index=True, axis=1)\n        self.df_wide = df_wide",
+        "name": "io.json.ToJSONWide.peakmem_to_json_wide",
+        "param_names": [
+            "orient",
+            "frame"
+        ],
+        "params": [
+            [
+                "'split'",
+                "'columns'",
+                "'index'",
+                "'values'",
+                "'records'"
+            ],
+            [
+                "'df'",
+                "'df_date_idx'",
+                "'df_td_int_ts'",
+                "'df_int_floats'",
+                "'df_int_float_str'"
+            ]
+        ],
+        "timeout": 60.0,
+        "type": "peakmemory",
+        "unit": "bytes",
+        "version": "350c040ee03cb09b3b2af80aacdb6f89f0b64fb12027e7abfcecf1754316da0d"
+    },
+    "io.json.ToJSONWide.time_to_json": {
+        "code": "class ToJSON:\n    def time_to_json(self, orient, frame):\n        getattr(self, frame).to_json(self.fname, orient=orient)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass ToJSONWide:\n    def setup(self, orient, frame):\n        super().setup(orient, frame)\n        base_df = getattr(self, frame).copy()\n        df_wide = concat([base_df.iloc[:100]] * 1000, ignore_index=True, axis=1)\n        self.df_wide = df_wide",
+        "min_run_count": 2,
+        "name": "io.json.ToJSONWide.time_to_json",
+        "number": 0,
+        "param_names": [
+            "orient",
+            "frame"
+        ],
+        "params": [
+            [
+                "'split'",
+                "'columns'",
+                "'index'",
+                "'values'",
+                "'records'"
+            ],
+            [
+                "'df'",
+                "'df_date_idx'",
+                "'df_td_int_ts'",
+                "'df_int_floats'",
+                "'df_int_float_str'"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "3efe5275ae2f37aaa5320e63422ce5b375719e691728af347d4018c67aef213a",
+        "warmup_time": -1
+    },
+    "io.json.ToJSONWide.time_to_json_wide": {
+        "code": "class ToJSONWide:\n    def time_to_json_wide(self, orient, frame):\n        self.df_wide.to_json(self.fname, orient=orient)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass ToJSONWide:\n    def setup(self, orient, frame):\n        super().setup(orient, frame)\n        base_df = getattr(self, frame).copy()\n        df_wide = concat([base_df.iloc[:100]] * 1000, ignore_index=True, axis=1)\n        self.df_wide = df_wide",
+        "min_run_count": 2,
+        "name": "io.json.ToJSONWide.time_to_json_wide",
+        "number": 0,
+        "param_names": [
+            "orient",
+            "frame"
+        ],
+        "params": [
+            [
+                "'split'",
+                "'columns'",
+                "'index'",
+                "'values'",
+                "'records'"
+            ],
+            [
+                "'df'",
+                "'df_date_idx'",
+                "'df_td_int_ts'",
+                "'df_int_floats'",
+                "'df_int_float_str'"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "aae5665173eb24e14595380fcf07cfeeab21783b5862479ee4e358e042ba6c38",
+        "warmup_time": -1
     },
     "io.parsers.ConcatDateCols.time_check_concat": {
         "code": "class ConcatDateCols:\n    def time_check_concat(self, value, dim):\n        concat_date_cols(self.object)\n\n    def setup(self, value, dim):\n        count_elem = 10000\n        if dim == 1:\n            self.object = (np.array([value] * count_elem),)\n        if dim == 2:\n            self.object = (\n                np.array([value] * count_elem),\n                np.array([value] * count_elem),\n            )",
@@ -12398,7 +12490,7 @@
         "version": "1d74d0ee63b8ddbcb67f37a2c6260ebe84c54ec1d2650db12d284630efa672c9"
     },
     "io.style.Render.peakmem_format_render": {
-        "code": "class Render:\n    def peakmem_format_render(self, cols, rows):\n        self._style_format()\n        self.st.render()\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
+        "code": "class Render:\n    def peakmem_format_render(self, cols, rows):\n        self._style_format()\n        self.st._render_html(True, True)\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
         "name": "io.style.Render.peakmem_format_render",
         "param_names": [
             "cols",
@@ -12418,7 +12510,7 @@
         "timeout": 60.0,
         "type": "peakmemory",
         "unit": "bytes",
-        "version": "ab961bc1fa46f108aa9e39ca2e2374a469ef28383e02ad24ba50aaebf0fccc69"
+        "version": "2d2ae2b598964ca4ec2ce6befed05ff0ed2c8833539c314cbc42c2a006d9abcf"
     },
     "io.style.Render.time_apply_render": {
         "code": "class Render:\n    def time_apply_render(self, cols, rows):\n        self._style_apply()\n        self.st._render_html(True, True)\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
@@ -12479,7 +12571,7 @@
         "warmup_time": -1
     },
     "io.style.Render.time_format_render": {
-        "code": "class Render:\n    def time_format_render(self, cols, rows):\n        self._style_format()\n        self.st.render()\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
+        "code": "class Render:\n    def time_format_render(self, cols, rows):\n        self._style_format()\n        self.st._render_html(True, True)\n\n    def setup(self, cols, rows):\n        self.df = DataFrame(\n            np.random.randn(rows, cols),\n            columns=[f\"float_{i+1}\" for i in range(cols)],\n            index=[f\"row_{i+1}\" for i in range(rows)],\n        )",
         "min_run_count": 2,
         "name": "io.style.Render.time_format_render",
         "number": 0,
@@ -12504,7 +12596,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "9a3475dd3e1e08e2eddd20f2b68e44da1ccdfdd2b4901016374717cfce2de6be",
+        "version": "2fe7b97954d549aadb2eb134d3d09b8c1334a640488b36869090ed4c430365ed",
         "warmup_time": -1
     },
     "join_merge.Align.time_series_align_int64_index": {

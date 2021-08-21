@@ -1,0 +1,9 @@
+{
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) W-2133 CPU @ 3.60GHz",
+    "machine": "p520",
+    "num_cpu": "12",
+    "os": "Linux 5.4.0-81-generic",
+    "ram": "15947916",
+    "version": 1
+}
