@@ -7623,7 +7623,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "f22593b8d6df9c0420ee8857f9b382c665ecbaf7ef0d0786cf0f5d9d6330ae21",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "hash_functions.NumericSeriesIndexingShuffled.time_loc_slice": {
         "code": "class NumericSeriesIndexingShuffled:\n    def time_loc_slice(self, index, N):\n        # trigger building of mapping\n        self.data.loc[:800]\n\n    def setup(self, index, N):\n        vals = np.array(list(range(55)) + [54] + list(range(55, N - 1)))\n        np.random.shuffle(vals)\n        indices = index(vals)\n        self.data = pd.Series(np.arange(N), index=indices)",
@@ -7655,7 +7655,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "3c20465e8c11d0248c3518850d998ff4e2057e4887b2e53bc01804188718b746",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "hash_functions.UniqueAndFactorizeArange.time_factorize": {
         "code": "class UniqueAndFactorizeArange:\n    def time_factorize(self, exponent):\n        pd.factorize(self.a2)\n\n    def setup(self, exponent):\n        a = np.arange(10 ** 4, dtype=\"float64\")\n        self.a2 = (a + 10 ** exponent).repeat(100)",
@@ -8651,7 +8651,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "8ea9c7039a817fe448a4dac312a856ce05a9192ca798a30faa1cf28b6a12946e",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.CategoricalIndexIndexing.time_get_loc_scalar": {
         "code": "class CategoricalIndexIndexing:\n    def time_get_loc_scalar(self, index):\n        self.data.get_loc(self.cat_scalar)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass CategoricalIndexIndexing:\n    def setup(self, index):\n        N = 10 ** 5\n        values = list(\"a\" * N + \"b\" * N + \"c\" * N)\n        indices = {\n            \"monotonic_incr\": CategoricalIndex(values),\n            \"monotonic_decr\": CategoricalIndex(reversed(values)),\n            \"non_monotonic\": CategoricalIndex(list(\"abc\" * N)),\n        }\n        self.data = indices[index]\n        self.data_unique = CategoricalIndex(\n            [\"\".join(perm) for perm in itertools.permutations(string.printable, 3)]\n        )\n    \n        self.int_scalar = 10000\n        self.int_list = list(range(10000))\n    \n        self.cat_scalar = \"b\"\n        self.cat_list = [\"a\", \"c\"]",
@@ -8675,7 +8675,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "afc69fb401813ebe0d6e980de27ec5979fdfff2ea164c8a83c1cf53d22440371",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.CategoricalIndexIndexing.time_getitem_bool_array": {
         "code": "class CategoricalIndexIndexing:\n    def time_getitem_bool_array(self, index):\n        self.data[self.data == self.cat_scalar]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass CategoricalIndexIndexing:\n    def setup(self, index):\n        N = 10 ** 5\n        values = list(\"a\" * N + \"b\" * N + \"c\" * N)\n        indices = {\n            \"monotonic_incr\": CategoricalIndex(values),\n            \"monotonic_decr\": CategoricalIndex(reversed(values)),\n            \"non_monotonic\": CategoricalIndex(list(\"abc\" * N)),\n        }\n        self.data = indices[index]\n        self.data_unique = CategoricalIndex(\n            [\"\".join(perm) for perm in itertools.permutations(string.printable, 3)]\n        )\n    \n        self.int_scalar = 10000\n        self.int_list = list(range(10000))\n    \n        self.cat_scalar = \"b\"\n        self.cat_list = [\"a\", \"c\"]",
@@ -8699,7 +8699,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "da8ead6ac5e2df0697e55214dd8944bf5e9bb6363e3145db43589f2b846ffc83",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.CategoricalIndexIndexing.time_getitem_list": {
         "code": "class CategoricalIndexIndexing:\n    def time_getitem_list(self, index):\n        self.data[self.int_list]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass CategoricalIndexIndexing:\n    def setup(self, index):\n        N = 10 ** 5\n        values = list(\"a\" * N + \"b\" * N + \"c\" * N)\n        indices = {\n            \"monotonic_incr\": CategoricalIndex(values),\n            \"monotonic_decr\": CategoricalIndex(reversed(values)),\n            \"non_monotonic\": CategoricalIndex(list(\"abc\" * N)),\n        }\n        self.data = indices[index]\n        self.data_unique = CategoricalIndex(\n            [\"\".join(perm) for perm in itertools.permutations(string.printable, 3)]\n        )\n    \n        self.int_scalar = 10000\n        self.int_list = list(range(10000))\n    \n        self.cat_scalar = \"b\"\n        self.cat_list = [\"a\", \"c\"]",
@@ -8723,7 +8723,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "d554b51160d1b3d333806f0d9dac107f81d21b5e5174f84ac2d5456b33fb5d7d",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.CategoricalIndexIndexing.time_getitem_list_like": {
         "code": "class CategoricalIndexIndexing:\n    def time_getitem_list_like(self, index):\n        self.data[[self.int_scalar]]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass CategoricalIndexIndexing:\n    def setup(self, index):\n        N = 10 ** 5\n        values = list(\"a\" * N + \"b\" * N + \"c\" * N)\n        indices = {\n            \"monotonic_incr\": CategoricalIndex(values),\n            \"monotonic_decr\": CategoricalIndex(reversed(values)),\n            \"non_monotonic\": CategoricalIndex(list(\"abc\" * N)),\n        }\n        self.data = indices[index]\n        self.data_unique = CategoricalIndex(\n            [\"\".join(perm) for perm in itertools.permutations(string.printable, 3)]\n        )\n    \n        self.int_scalar = 10000\n        self.int_list = list(range(10000))\n    \n        self.cat_scalar = \"b\"\n        self.cat_list = [\"a\", \"c\"]",
@@ -8747,7 +8747,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "c6f1d67c9c65915f21a5b253c159cb58094ec4d76b36fb06c828d46b245a84f9",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.CategoricalIndexIndexing.time_getitem_scalar": {
         "code": "class CategoricalIndexIndexing:\n    def time_getitem_scalar(self, index):\n        self.data[self.int_scalar]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass CategoricalIndexIndexing:\n    def setup(self, index):\n        N = 10 ** 5\n        values = list(\"a\" * N + \"b\" * N + \"c\" * N)\n        indices = {\n            \"monotonic_incr\": CategoricalIndex(values),\n            \"monotonic_decr\": CategoricalIndex(reversed(values)),\n            \"non_monotonic\": CategoricalIndex(list(\"abc\" * N)),\n        }\n        self.data = indices[index]\n        self.data_unique = CategoricalIndex(\n            [\"\".join(perm) for perm in itertools.permutations(string.printable, 3)]\n        )\n    \n        self.int_scalar = 10000\n        self.int_list = list(range(10000))\n    \n        self.cat_scalar = \"b\"\n        self.cat_list = [\"a\", \"c\"]",
@@ -8771,7 +8771,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "93c968f66c94bb030c0706d6783c796173d72ccc3707416d080388f24b0d154f",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.CategoricalIndexIndexing.time_getitem_slice": {
         "code": "class CategoricalIndexIndexing:\n    def time_getitem_slice(self, index):\n        self.data[: self.int_scalar]\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass CategoricalIndexIndexing:\n    def setup(self, index):\n        N = 10 ** 5\n        values = list(\"a\" * N + \"b\" * N + \"c\" * N)\n        indices = {\n            \"monotonic_incr\": CategoricalIndex(values),\n            \"monotonic_decr\": CategoricalIndex(reversed(values)),\n            \"non_monotonic\": CategoricalIndex(list(\"abc\" * N)),\n        }\n        self.data = indices[index]\n        self.data_unique = CategoricalIndex(\n            [\"\".join(perm) for perm in itertools.permutations(string.printable, 3)]\n        )\n    \n        self.int_scalar = 10000\n        self.int_list = list(range(10000))\n    \n        self.cat_scalar = \"b\"\n        self.cat_list = [\"a\", \"c\"]",
@@ -8795,7 +8795,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "29ec986fadd8640f4709bc5134f176c305ac6f475802206fed2c2d8fb71d2797",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "indexing.ChainIndexing.time_chained_indexing": {
         "code": "class ChainIndexing:\n    def time_chained_indexing(self, mode):\n        with warnings.catch_warnings(record=True):\n            with option_context(\"mode.chained_assignment\", mode):\n                df = DataFrame({\"A\": np.arange(self.N), \"B\": \"foo\"})\n                df2 = df[df.A > self.N // 2]\n                df2[\"C\"] = 1.0\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass ChainIndexing:\n    def setup(self, mode):\n        self.N = 1000000",
@@ -9232,7 +9232,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "indexing:308",
+        "setup_cache_key": "indexing:309",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -9249,7 +9249,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "indexing:308",
+        "setup_cache_key": "indexing:309",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -13564,7 +13564,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "dd084286aabcc048d0407dfacebe59f29ed1f976d92d013a0a10f35ba2e96bdb",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "multiindex_object.GetLoc.time_large_get_loc_warm": {
         "code": "class GetLoc:\n    def time_large_get_loc_warm(self):\n        for _ in range(1000):\n            self.mi_large.get_loc((999, 19, \"Z\"))\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass GetLoc:\n    def setup(self):\n        self.mi_large = MultiIndex.from_product(\n            [np.arange(1000), np.arange(20), list(string.ascii_letters)],\n            names=[\"one\", \"two\", \"three\"],\n        )\n        self.mi_med = MultiIndex.from_product(\n            [np.arange(1000), np.arange(10), list(\"A\")], names=[\"one\", \"two\", \"three\"]\n        )\n        self.mi_small = MultiIndex.from_product(\n            [np.arange(100), list(\"A\"), list(\"A\")], names=[\"one\", \"two\", \"three\"]\n        )",
@@ -13580,7 +13580,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "137653619e4d1b432e07d94aa7a9cf46441e320de449aa65f5129efc13888912",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "multiindex_object.GetLoc.time_med_get_loc": {
         "code": "class GetLoc:\n    def time_med_get_loc(self):\n        self.mi_med.get_loc((999, 9, \"A\"))\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass GetLoc:\n    def setup(self):\n        self.mi_large = MultiIndex.from_product(\n            [np.arange(1000), np.arange(20), list(string.ascii_letters)],\n            names=[\"one\", \"two\", \"three\"],\n        )\n        self.mi_med = MultiIndex.from_product(\n            [np.arange(1000), np.arange(10), list(\"A\")], names=[\"one\", \"two\", \"three\"]\n        )\n        self.mi_small = MultiIndex.from_product(\n            [np.arange(100), list(\"A\"), list(\"A\")], names=[\"one\", \"two\", \"three\"]\n        )",
@@ -13596,7 +13596,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "b783d9cb5dbdc6787a0879e0f8c0862c4014d5ea0611abb97c342d46f77826e1",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "multiindex_object.GetLoc.time_med_get_loc_warm": {
         "code": "class GetLoc:\n    def time_med_get_loc_warm(self):\n        for _ in range(1000):\n            self.mi_med.get_loc((999, 9, \"A\"))\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass GetLoc:\n    def setup(self):\n        self.mi_large = MultiIndex.from_product(\n            [np.arange(1000), np.arange(20), list(string.ascii_letters)],\n            names=[\"one\", \"two\", \"three\"],\n        )\n        self.mi_med = MultiIndex.from_product(\n            [np.arange(1000), np.arange(10), list(\"A\")], names=[\"one\", \"two\", \"three\"]\n        )\n        self.mi_small = MultiIndex.from_product(\n            [np.arange(100), list(\"A\"), list(\"A\")], names=[\"one\", \"two\", \"three\"]\n        )",
@@ -13612,7 +13612,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "50ea4f6a67d9f88227e60e668996edef05b7564987506a1145e7b2c23a2ccb41",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "multiindex_object.GetLoc.time_small_get_loc_warm": {
         "code": "class GetLoc:\n    def time_small_get_loc_warm(self):\n        for _ in range(1000):\n            self.mi_small.get_loc((99, \"A\", \"A\"))\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass GetLoc:\n    def setup(self):\n        self.mi_large = MultiIndex.from_product(\n            [np.arange(1000), np.arange(20), list(string.ascii_letters)],\n            names=[\"one\", \"two\", \"three\"],\n        )\n        self.mi_med = MultiIndex.from_product(\n            [np.arange(1000), np.arange(10), list(\"A\")], names=[\"one\", \"two\", \"three\"]\n        )\n        self.mi_small = MultiIndex.from_product(\n            [np.arange(100), list(\"A\"), list(\"A\")], names=[\"one\", \"two\", \"three\"]\n        )",
@@ -13628,7 +13628,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "fe1c2475d50cac160a619e2371fc123f6053a4346c2f4d01018f499d4cfec4e7",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "multiindex_object.GetLoc.time_string_get_loc": {
         "code": "class GetLoc:\n    def time_string_get_loc(self):\n        self.mi_small.get_loc((99, \"A\", \"A\"))\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass GetLoc:\n    def setup(self):\n        self.mi_large = MultiIndex.from_product(\n            [np.arange(1000), np.arange(20), list(string.ascii_letters)],\n            names=[\"one\", \"two\", \"three\"],\n        )\n        self.mi_med = MultiIndex.from_product(\n            [np.arange(1000), np.arange(10), list(\"A\")], names=[\"one\", \"two\", \"three\"]\n        )\n        self.mi_small = MultiIndex.from_product(\n            [np.arange(100), list(\"A\"), list(\"A\")], names=[\"one\", \"two\", \"three\"]\n        )",
@@ -13644,7 +13644,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "e96912b143865fa80131f906e8f63d1f3c40b3d142b8571de3b1b9615adf1801",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "multiindex_object.Integer.time_get_indexer": {
         "code": "class Integer:\n    def time_get_indexer(self):\n        self.mi_int.get_indexer(self.obj_index)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Integer:\n    def setup(self):\n        self.mi_int = MultiIndex.from_product(\n            [np.arange(1000), np.arange(1000)], names=[\"one\", \"two\"]\n        )\n        self.obj_index = np.array(\n            [\n                (0, 10),\n                (0, 11),\n                (0, 12),\n                (0, 13),\n                (0, 14),\n                (0, 15),\n                (0, 16),\n                (0, 17),\n                (0, 18),\n                (0, 19),\n            ],\n            dtype=object,\n        )\n        self.other_mi_many_mismatches = MultiIndex.from_tuples(\n            [\n                (-7, 41),\n                (-2, 3),\n                (-0.7, 5),\n                (0, 0),\n                (0, 1.5),\n                (0, 340),\n                (0, 1001),\n                (1, -4),\n                (1, 20),\n                (1, 1040),\n                (432, -5),\n                (432, 17),\n                (439, 165.5),\n                (998, -4),\n                (998, 24065),\n                (999, 865.2),\n                (999, 1000),\n                (1045, -843),\n            ]\n        )",
@@ -13803,7 +13803,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "multiindex_object:155",
+        "setup_cache_key": "multiindex_object:157",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -13820,7 +13820,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "multiindex_object:155",
+        "setup_cache_key": "multiindex_object:157",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
