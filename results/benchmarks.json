@@ -3852,8 +3852,24 @@
         "version": "225c22c0601994be668586bdb257030c2fd0d83e6dec0712bd820db812484318",
         "warmup_time": -1
     },
+    "frame_ctor.FromDicts.time_dict_of_categoricals": {
+        "code": "class FromDicts:\n    def time_dict_of_categoricals(self):\n        # dict of arrays that we wont consolidate\n        DataFrame(self.dict_of_categoricals)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDicts:\n    def setup(self):\n        N, K = 5000, 50\n        self.index = tm.makeStringIndex(N)\n        self.columns = tm.makeStringIndex(K)\n        frame = DataFrame(np.random.randn(N, K), index=self.index, columns=self.columns)\n        self.data = frame.to_dict()\n        self.dict_list = frame.to_dict(orient=\"records\")\n        self.data2 = {i: {j: float(j) for j in range(100)} for i in range(2000)}\n    \n        # arrays which we wont consolidate\n        self.dict_of_categoricals = {i: Categorical(np.arange(N)) for i in range(K)}",
+        "min_run_count": 2,
+        "name": "frame_ctor.FromDicts.time_dict_of_categoricals",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "d01992efc85d7a9662ce1a58161e208f88df81334987a941b69447164a2f384f",
+        "warmup_time": -1
+    },
     "frame_ctor.FromDicts.time_list_of_dict": {
-        "code": "class FromDicts:\n    def time_list_of_dict(self):\n        DataFrame(self.dict_list)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDicts:\n    def setup(self):\n        N, K = 5000, 50\n        self.index = tm.makeStringIndex(N)\n        self.columns = tm.makeStringIndex(K)\n        frame = DataFrame(np.random.randn(N, K), index=self.index, columns=self.columns)\n        self.data = frame.to_dict()\n        self.dict_list = frame.to_dict(orient=\"records\")\n        self.data2 = {i: {j: float(j) for j in range(100)} for i in range(2000)}",
+        "code": "class FromDicts:\n    def time_list_of_dict(self):\n        DataFrame(self.dict_list)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDicts:\n    def setup(self):\n        N, K = 5000, 50\n        self.index = tm.makeStringIndex(N)\n        self.columns = tm.makeStringIndex(K)\n        frame = DataFrame(np.random.randn(N, K), index=self.index, columns=self.columns)\n        self.data = frame.to_dict()\n        self.dict_list = frame.to_dict(orient=\"records\")\n        self.data2 = {i: {j: float(j) for j in range(100)} for i in range(2000)}\n    \n        # arrays which we wont consolidate\n        self.dict_of_categoricals = {i: Categorical(np.arange(N)) for i in range(K)}",
         "min_run_count": 2,
         "name": "frame_ctor.FromDicts.time_list_of_dict",
         "number": 0,
@@ -3865,11 +3881,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "174eb052795c507f4dc0358b6a6116384db4b9cc00ba3393cec67f14302e6f46",
+        "version": "dcaf083da69bfda97c9dd913d9c0df2926d7aa4b3f4c781f0600eaa2d2519e7f",
         "warmup_time": -1
     },
     "frame_ctor.FromDicts.time_nested_dict": {
-        "code": "class FromDicts:\n    def time_nested_dict(self):\n        DataFrame(self.data)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDicts:\n    def setup(self):\n        N, K = 5000, 50\n        self.index = tm.makeStringIndex(N)\n        self.columns = tm.makeStringIndex(K)\n        frame = DataFrame(np.random.randn(N, K), index=self.index, columns=self.columns)\n        self.data = frame.to_dict()\n        self.dict_list = frame.to_dict(orient=\"records\")\n        self.data2 = {i: {j: float(j) for j in range(100)} for i in range(2000)}",
+        "code": "class FromDicts:\n    def time_nested_dict(self):\n        DataFrame(self.data)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDicts:\n    def setup(self):\n        N, K = 5000, 50\n        self.index = tm.makeStringIndex(N)\n        self.columns = tm.makeStringIndex(K)\n        frame = DataFrame(np.random.randn(N, K), index=self.index, columns=self.columns)\n        self.data = frame.to_dict()\n        self.dict_list = frame.to_dict(orient=\"records\")\n        self.data2 = {i: {j: float(j) for j in range(100)} for i in range(2000)}\n    \n        # arrays which we wont consolidate\n        self.dict_of_categoricals = {i: Categorical(np.arange(N)) for i in range(K)}",
         "min_run_count": 2,
         "name": "frame_ctor.FromDicts.time_nested_dict",
         "number": 0,
@@ -3881,11 +3897,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "173d9370d58a7963078a185996862e2a5455bf3176668c3149143ced27574c1b",
+        "version": "add19204a6c10f08c630c4e64d888bc97ec4f42e45059f2abb2f9e42f53ff9df",
         "warmup_time": -1
     },
     "frame_ctor.FromDicts.time_nested_dict_columns": {
-        "code": "class FromDicts:\n    def time_nested_dict_columns(self):\n        DataFrame(self.data, columns=self.columns)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDicts:\n    def setup(self):\n        N, K = 5000, 50\n        self.index = tm.makeStringIndex(N)\n        self.columns = tm.makeStringIndex(K)\n        frame = DataFrame(np.random.randn(N, K), index=self.index, columns=self.columns)\n        self.data = frame.to_dict()\n        self.dict_list = frame.to_dict(orient=\"records\")\n        self.data2 = {i: {j: float(j) for j in range(100)} for i in range(2000)}",
+        "code": "class FromDicts:\n    def time_nested_dict_columns(self):\n        DataFrame(self.data, columns=self.columns)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDicts:\n    def setup(self):\n        N, K = 5000, 50\n        self.index = tm.makeStringIndex(N)\n        self.columns = tm.makeStringIndex(K)\n        frame = DataFrame(np.random.randn(N, K), index=self.index, columns=self.columns)\n        self.data = frame.to_dict()\n        self.dict_list = frame.to_dict(orient=\"records\")\n        self.data2 = {i: {j: float(j) for j in range(100)} for i in range(2000)}\n    \n        # arrays which we wont consolidate\n        self.dict_of_categoricals = {i: Categorical(np.arange(N)) for i in range(K)}",
         "min_run_count": 2,
         "name": "frame_ctor.FromDicts.time_nested_dict_columns",
         "number": 0,
@@ -3897,11 +3913,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "8d5177be5f9df0143c830e5a6ef1c1bf0a861a9a209aca391cd840d990806311",
+        "version": "5d026b31065518c4a5edf7a7df0533ed14f15a275fcfb9fe3427b1b37bcf28fb",
         "warmup_time": -1
     },
     "frame_ctor.FromDicts.time_nested_dict_index": {
-        "code": "class FromDicts:\n    def time_nested_dict_index(self):\n        DataFrame(self.data, index=self.index)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDicts:\n    def setup(self):\n        N, K = 5000, 50\n        self.index = tm.makeStringIndex(N)\n        self.columns = tm.makeStringIndex(K)\n        frame = DataFrame(np.random.randn(N, K), index=self.index, columns=self.columns)\n        self.data = frame.to_dict()\n        self.dict_list = frame.to_dict(orient=\"records\")\n        self.data2 = {i: {j: float(j) for j in range(100)} for i in range(2000)}",
+        "code": "class FromDicts:\n    def time_nested_dict_index(self):\n        DataFrame(self.data, index=self.index)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDicts:\n    def setup(self):\n        N, K = 5000, 50\n        self.index = tm.makeStringIndex(N)\n        self.columns = tm.makeStringIndex(K)\n        frame = DataFrame(np.random.randn(N, K), index=self.index, columns=self.columns)\n        self.data = frame.to_dict()\n        self.dict_list = frame.to_dict(orient=\"records\")\n        self.data2 = {i: {j: float(j) for j in range(100)} for i in range(2000)}\n    \n        # arrays which we wont consolidate\n        self.dict_of_categoricals = {i: Categorical(np.arange(N)) for i in range(K)}",
         "min_run_count": 2,
         "name": "frame_ctor.FromDicts.time_nested_dict_index",
         "number": 0,
@@ -3913,11 +3929,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "e4de974e68f207a130f9c4bf99fb8fe2bcef63392850edff24c2a2a7a4573624",
+        "version": "0334c078a76266740420bbe2d4f06d42c8d354ce222c047d8e889c7782f1d0fb",
         "warmup_time": -1
     },
     "frame_ctor.FromDicts.time_nested_dict_index_columns": {
-        "code": "class FromDicts:\n    def time_nested_dict_index_columns(self):\n        DataFrame(self.data, index=self.index, columns=self.columns)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDicts:\n    def setup(self):\n        N, K = 5000, 50\n        self.index = tm.makeStringIndex(N)\n        self.columns = tm.makeStringIndex(K)\n        frame = DataFrame(np.random.randn(N, K), index=self.index, columns=self.columns)\n        self.data = frame.to_dict()\n        self.dict_list = frame.to_dict(orient=\"records\")\n        self.data2 = {i: {j: float(j) for j in range(100)} for i in range(2000)}",
+        "code": "class FromDicts:\n    def time_nested_dict_index_columns(self):\n        DataFrame(self.data, index=self.index, columns=self.columns)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDicts:\n    def setup(self):\n        N, K = 5000, 50\n        self.index = tm.makeStringIndex(N)\n        self.columns = tm.makeStringIndex(K)\n        frame = DataFrame(np.random.randn(N, K), index=self.index, columns=self.columns)\n        self.data = frame.to_dict()\n        self.dict_list = frame.to_dict(orient=\"records\")\n        self.data2 = {i: {j: float(j) for j in range(100)} for i in range(2000)}\n    \n        # arrays which we wont consolidate\n        self.dict_of_categoricals = {i: Categorical(np.arange(N)) for i in range(K)}",
         "min_run_count": 2,
         "name": "frame_ctor.FromDicts.time_nested_dict_index_columns",
         "number": 0,
@@ -3929,11 +3945,11 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "28e021b94e59b70570604850a6452738a47585b1d327e348613f34f11452a3eb",
+        "version": "97b59f84808d3276d1488dee6b4d3f8feba11d796df6eddc2ff63e3338d08f6e",
         "warmup_time": -1
     },
     "frame_ctor.FromDicts.time_nested_dict_int64": {
-        "code": "class FromDicts:\n    def time_nested_dict_int64(self):\n        # nested dict, integer indexes, regression described in #621\n        DataFrame(self.data2)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDicts:\n    def setup(self):\n        N, K = 5000, 50\n        self.index = tm.makeStringIndex(N)\n        self.columns = tm.makeStringIndex(K)\n        frame = DataFrame(np.random.randn(N, K), index=self.index, columns=self.columns)\n        self.data = frame.to_dict()\n        self.dict_list = frame.to_dict(orient=\"records\")\n        self.data2 = {i: {j: float(j) for j in range(100)} for i in range(2000)}",
+        "code": "class FromDicts:\n    def time_nested_dict_int64(self):\n        # nested dict, integer indexes, regression described in #621\n        DataFrame(self.data2)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass FromDicts:\n    def setup(self):\n        N, K = 5000, 50\n        self.index = tm.makeStringIndex(N)\n        self.columns = tm.makeStringIndex(K)\n        frame = DataFrame(np.random.randn(N, K), index=self.index, columns=self.columns)\n        self.data = frame.to_dict()\n        self.dict_list = frame.to_dict(orient=\"records\")\n        self.data2 = {i: {j: float(j) for j in range(100)} for i in range(2000)}\n    \n        # arrays which we wont consolidate\n        self.dict_of_categoricals = {i: Categorical(np.arange(N)) for i in range(K)}",
         "min_run_count": 2,
         "name": "frame_ctor.FromDicts.time_nested_dict_int64",
         "number": 0,
@@ -3945,7 +3961,7 @@
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
-        "version": "6daf6b113ecbae4883b3e70df8a2095a2e9d9b5c9b6a1a983724ab35daec303c",
+        "version": "ee2910c901abc0fb56b4210fd59f762830b4a53fea3918a1807e65d6dbd12112",
         "warmup_time": -1
     },
     "frame_ctor.FromDictwithTimestamp.time_dict_with_timestamp_offsets": {
