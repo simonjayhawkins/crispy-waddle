@@ -13660,7 +13660,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "fbdc58718b979f87ea6a8c82f9bc10f0b1ebc5fb70ea385528f54cff5edb41e7",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "multiindex_object.Integer.time_get_indexer_and_backfill": {
         "code": "class Integer:\n    def time_get_indexer_and_backfill(self):\n        self.mi_int.get_indexer(self.other_mi_many_mismatches, method=\"backfill\")\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Integer:\n    def setup(self):\n        self.mi_int = MultiIndex.from_product(\n            [np.arange(1000), np.arange(1000)], names=[\"one\", \"two\"]\n        )\n        self.obj_index = np.array(\n            [\n                (0, 10),\n                (0, 11),\n                (0, 12),\n                (0, 13),\n                (0, 14),\n                (0, 15),\n                (0, 16),\n                (0, 17),\n                (0, 18),\n                (0, 19),\n            ],\n            dtype=object,\n        )\n        self.other_mi_many_mismatches = MultiIndex.from_tuples(\n            [\n                (-7, 41),\n                (-2, 3),\n                (-0.7, 5),\n                (0, 0),\n                (0, 1.5),\n                (0, 340),\n                (0, 1001),\n                (1, -4),\n                (1, 20),\n                (1, 1040),\n                (432, -5),\n                (432, 17),\n                (439, 165.5),\n                (998, -4),\n                (998, 24065),\n                (999, 865.2),\n                (999, 1000),\n                (1045, -843),\n            ]\n        )",
@@ -13676,7 +13676,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "f3a337ce0bc68b9b181e2f10744c48edfc0aea4481ed3ae1d3daf65dc1c9d53b",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "multiindex_object.Integer.time_get_indexer_and_pad": {
         "code": "class Integer:\n    def time_get_indexer_and_pad(self):\n        self.mi_int.get_indexer(self.other_mi_many_mismatches, method=\"pad\")\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Integer:\n    def setup(self):\n        self.mi_int = MultiIndex.from_product(\n            [np.arange(1000), np.arange(1000)], names=[\"one\", \"two\"]\n        )\n        self.obj_index = np.array(\n            [\n                (0, 10),\n                (0, 11),\n                (0, 12),\n                (0, 13),\n                (0, 14),\n                (0, 15),\n                (0, 16),\n                (0, 17),\n                (0, 18),\n                (0, 19),\n            ],\n            dtype=object,\n        )\n        self.other_mi_many_mismatches = MultiIndex.from_tuples(\n            [\n                (-7, 41),\n                (-2, 3),\n                (-0.7, 5),\n                (0, 0),\n                (0, 1.5),\n                (0, 340),\n                (0, 1001),\n                (1, -4),\n                (1, 20),\n                (1, 1040),\n                (432, -5),\n                (432, 17),\n                (439, 165.5),\n                (998, -4),\n                (998, 24065),\n                (999, 865.2),\n                (999, 1000),\n                (1045, -843),\n            ]\n        )",
@@ -13692,7 +13692,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "ee2af65e57a49d84022609e04c926f032e6e248514ffaccf6af4a25038d13f78",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "multiindex_object.Integer.time_is_monotonic": {
         "code": "class Integer:\n    def time_is_monotonic(self):\n        self.mi_int.is_monotonic\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Integer:\n    def setup(self):\n        self.mi_int = MultiIndex.from_product(\n            [np.arange(1000), np.arange(1000)], names=[\"one\", \"two\"]\n        )\n        self.obj_index = np.array(\n            [\n                (0, 10),\n                (0, 11),\n                (0, 12),\n                (0, 13),\n                (0, 14),\n                (0, 15),\n                (0, 16),\n                (0, 17),\n                (0, 18),\n                (0, 19),\n            ],\n            dtype=object,\n        )\n        self.other_mi_many_mismatches = MultiIndex.from_tuples(\n            [\n                (-7, 41),\n                (-2, 3),\n                (-0.7, 5),\n                (0, 0),\n                (0, 1.5),\n                (0, 340),\n                (0, 1001),\n                (1, -4),\n                (1, 20),\n                (1, 1040),\n                (432, -5),\n                (432, 17),\n                (439, 165.5),\n                (998, -4),\n                (998, 24065),\n                (999, 865.2),\n                (999, 1000),\n                (1045, -843),\n            ]\n        )",
@@ -13708,7 +13708,7 @@
         "type": "time",
         "unit": "seconds",
         "version": "669bbad711376610b96fc5afdf2576db79f9c1f9f6250550069ad02f6f3230ec",
-        "warmup_time": -1
+        "warmup_time": 1.0
     },
     "multiindex_object.SetOperations.time_operation": {
         "code": "class SetOperations:\n    def time_operation(self, index_structure, dtype, method):\n        getattr(self.left, method)(self.right)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass SetOperations:\n    def setup(self, index_structure, dtype, method):\n        N = 10 ** 5\n        level1 = range(1000)\n    \n        level2 = date_range(start=\"1/1/2000\", periods=N // 1000)\n        dates_left = MultiIndex.from_product([level1, level2])\n    \n        level2 = range(N // 1000)\n        int_left = MultiIndex.from_product([level1, level2])\n    \n        level2 = tm.makeStringIndex(N // 1000).values\n        str_left = MultiIndex.from_product([level1, level2])\n    \n        data = {\n            \"datetime\": dates_left,\n            \"int\": int_left,\n            \"string\": str_left,\n        }\n    \n        if index_structure == \"non_monotonic\":\n            data = {k: mi[::-1] for k, mi in data.items()}\n    \n        data = {k: {\"left\": mi, \"right\": mi[:-1]} for k, mi in data.items()}\n        self.left = data[dtype][\"left\"]\n        self.right = data[dtype][\"right\"]",
@@ -13803,7 +13803,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "multiindex_object:157",
+        "setup_cache_key": "multiindex_object:159",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
@@ -13820,7 +13820,7 @@
         "repeat": 0,
         "rounds": 2,
         "sample_time": 0.01,
-        "setup_cache_key": "multiindex_object:157",
+        "setup_cache_key": "multiindex_object:159",
         "timeout": 60.0,
         "type": "time",
         "unit": "seconds",
