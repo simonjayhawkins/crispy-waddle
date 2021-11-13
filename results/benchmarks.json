@@ -8619,6 +8619,38 @@
         "version": "73d3ae38ff9c96f63c1a6bcb78c682aca66a5670ef0f11df83d69fadcc910b99",
         "warmup_time": -1
     },
+    "index_object.Range.time_sort_values_asc": {
+        "code": "class Range:\n    def time_sort_values_asc(self):\n        self.idx_inc.sort_values()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Range:\n    def setup(self):\n        self.idx_inc = RangeIndex(start=0, stop=10 ** 6, step=3)\n        self.idx_dec = RangeIndex(start=10 ** 6, stop=-1, step=-3)",
+        "min_run_count": 2,
+        "name": "index_object.Range.time_sort_values_asc",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "2f1ae0a8cc48a715d768e9808ad09bf6eb159042e5e80f5c3ffbc8d971c2c0ca",
+        "warmup_time": -1
+    },
+    "index_object.Range.time_sort_values_des": {
+        "code": "class Range:\n    def time_sort_values_des(self):\n        self.idx_inc.sort_values(ascending=False)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Range:\n    def setup(self):\n        self.idx_inc = RangeIndex(start=0, stop=10 ** 6, step=3)\n        self.idx_dec = RangeIndex(start=10 ** 6, stop=-1, step=-3)",
+        "min_run_count": 2,
+        "name": "index_object.Range.time_sort_values_des",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "1a949a3132c2bd752e2cc5d1b9f25ad2e9fe4f5f188488c7b546eeabb2e1790b",
+        "warmup_time": -1
+    },
     "index_object.SetDisjoint.time_datetime_difference_disjoint": {
         "code": "class SetDisjoint:\n    def time_datetime_difference_disjoint(self):\n        self.datetime_left.difference(self.datetime_right)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass SetDisjoint:\n    def setup(self):\n        N = 10 ** 5\n        B = N + 20000\n        self.datetime_left = DatetimeIndex(range(N))\n        self.datetime_right = DatetimeIndex(range(N, B))",
         "min_run_count": 2,
@@ -10441,6 +10473,22 @@
         "type": "time",
         "unit": "seconds",
         "version": "ffda3795a72b4023991d1daa18e3b0a3cabffd330b369a59c89a7d6c8d190102",
+        "warmup_time": -1
+    },
+    "inference.ToDatetimeInferDatetimeFormat.time_infer_datetime_format": {
+        "code": "class ToDatetimeInferDatetimeFormat:\n    def time_infer_datetime_format(self):\n        to_datetime(self.strings, infer_datetime_format=True)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass ToDatetimeInferDatetimeFormat:\n    def setup(self):\n        rng = date_range(start=\"1/1/2000\", periods=100000, freq=\"H\")\n        self.strings = rng.strftime(\"%Y-%m-%d %H:%M:%S\").tolist()",
+        "min_run_count": 2,
+        "name": "inference.ToDatetimeInferDatetimeFormat.time_infer_datetime_format",
+        "number": 0,
+        "param_names": [],
+        "params": [],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "1c3c74ed99381261b9280915b0699af46b2fa2fd04caecf83328d1bc6eabf06e",
         "warmup_time": -1
     },
     "inference.ToDatetimeNONISO8601.time_different_offset": {
@@ -15820,144 +15868,6 @@
         "version": "4f4c80ce73c0b45de998d82584c992d51914d9faba884d3b69dff9f766eb825e",
         "warmup_time": -1
     },
-    "rolling.Engine.time_expanding_apply": {
-        "code": "class Engine:\n    def time_expanding_apply(self, constructor, dtype, function, engine, method):\n        self.data.expanding().apply(function, raw=True, engine=engine)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Engine:\n    def setup(self, constructor, dtype, function, engine, method):\n        N = 10 ** 3\n        arr = (100 * np.random.random(N)).astype(dtype)\n        self.data = getattr(pd, constructor)(arr)",
-        "min_run_count": 2,
-        "name": "rolling.Engine.time_expanding_apply",
-        "number": 0,
-        "param_names": [
-            "constructor",
-            "dtype",
-            "function",
-            "engine",
-            "method"
-        ],
-        "params": [
-            [
-                "'DataFrame'",
-                "'Series'"
-            ],
-            [
-                "'int'",
-                "'float'"
-            ],
-            [
-                "<function sum>",
-                "<function Engine.<lambda>>"
-            ],
-            [
-                "'cython'",
-                "'numba'"
-            ],
-            [
-                "'sum'",
-                "'max'",
-                "'min'",
-                "'median'",
-                "'mean'"
-            ]
-        ],
-        "repeat": 0,
-        "rounds": 2,
-        "sample_time": 0.01,
-        "timeout": 60.0,
-        "type": "time",
-        "unit": "seconds",
-        "version": "995ac51bef52282611e8d848c1026908712d7236b0e5b1caf67b0129f440caae",
-        "warmup_time": -1
-    },
-    "rolling.Engine.time_rolling_apply": {
-        "code": "class Engine:\n    def time_rolling_apply(self, constructor, dtype, function, engine, method):\n        self.data.rolling(10).apply(function, raw=True, engine=engine)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Engine:\n    def setup(self, constructor, dtype, function, engine, method):\n        N = 10 ** 3\n        arr = (100 * np.random.random(N)).astype(dtype)\n        self.data = getattr(pd, constructor)(arr)",
-        "min_run_count": 2,
-        "name": "rolling.Engine.time_rolling_apply",
-        "number": 0,
-        "param_names": [
-            "constructor",
-            "dtype",
-            "function",
-            "engine",
-            "method"
-        ],
-        "params": [
-            [
-                "'DataFrame'",
-                "'Series'"
-            ],
-            [
-                "'int'",
-                "'float'"
-            ],
-            [
-                "<function sum>",
-                "<function Engine.<lambda>>"
-            ],
-            [
-                "'cython'",
-                "'numba'"
-            ],
-            [
-                "'sum'",
-                "'max'",
-                "'min'",
-                "'median'",
-                "'mean'"
-            ]
-        ],
-        "repeat": 0,
-        "rounds": 2,
-        "sample_time": 0.01,
-        "timeout": 60.0,
-        "type": "time",
-        "unit": "seconds",
-        "version": "428dac3be79c7c6565a59c9befcf5f42d5850331efc3575052ff8273490acd1f",
-        "warmup_time": -1
-    },
-    "rolling.Engine.time_rolling_methods": {
-        "code": "class Engine:\n    def time_rolling_methods(self, constructor, dtype, function, engine, method):\n        getattr(self.data.rolling(10), method)(engine=engine)\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass Engine:\n    def setup(self, constructor, dtype, function, engine, method):\n        N = 10 ** 3\n        arr = (100 * np.random.random(N)).astype(dtype)\n        self.data = getattr(pd, constructor)(arr)",
-        "min_run_count": 2,
-        "name": "rolling.Engine.time_rolling_methods",
-        "number": 0,
-        "param_names": [
-            "constructor",
-            "dtype",
-            "function",
-            "engine",
-            "method"
-        ],
-        "params": [
-            [
-                "'DataFrame'",
-                "'Series'"
-            ],
-            [
-                "'int'",
-                "'float'"
-            ],
-            [
-                "<function sum>",
-                "<function Engine.<lambda>>"
-            ],
-            [
-                "'cython'",
-                "'numba'"
-            ],
-            [
-                "'sum'",
-                "'max'",
-                "'min'",
-                "'median'",
-                "'mean'"
-            ]
-        ],
-        "repeat": 0,
-        "rounds": 2,
-        "sample_time": 0.01,
-        "timeout": 60.0,
-        "type": "time",
-        "unit": "seconds",
-        "version": "52c47880242b54a054730aa15463d5a2ab2239f128625783317563d6bbb4a661",
-        "warmup_time": -1
-    },
     "rolling.ExpandingMethods.time_expanding": {
         "code": "class ExpandingMethods:\n    def time_expanding(self, constructor, dtype, method):\n        getattr(self.expanding, method)()\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass ExpandingMethods:\n    def setup(self, constructor, dtype, method):\n        N = 10 ** 5\n        N_groupby = 100\n        arr = (100 * np.random.random(N)).astype(dtype)\n        self.expanding = getattr(pd, constructor)(arr).expanding()\n        self.expanding_groupby = (\n            pd.DataFrame({\"A\": arr[:N_groupby], \"B\": range(N_groupby)})\n            .groupby(\"B\")\n            .expanding()\n        )",
         "min_run_count": 2,
@@ -16318,6 +16228,159 @@
         "type": "time",
         "unit": "seconds",
         "version": "cfb9949400cb967dc45bbf3be65a1e0a41ceeea05bc37e385c2196d9da4ed178",
+        "warmup_time": -1
+    },
+    "rolling.NumbaEngine.time_expanding_apply": {
+        "code": "class NumbaEngine:\n    def time_expanding_apply(self, constructor, dtype, function, method, parallel, col):\n        with warnings.catch_warnings(record=True):\n            self.expand.apply(\n                function, raw=True, engine=\"numba\", engine_kwargs={\"parallel\": parallel}\n            )\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumbaEngine:\n    def setup(self, constructor, dtype, function, method, parallel, cols):\n        N = 10 ** 3\n        shape = (N, cols) if cols is not None and constructor != \"Series\" else N\n        arr = (100 * np.random.random(shape)).astype(dtype)\n        data = getattr(pd, constructor)(arr)\n    \n        # Warm the cache\n        with warnings.catch_warnings(record=True):\n            # Catch parallel=True not being applicable e.g. 1D data\n            self.roll = data.rolling(10)\n            self.roll.apply(\n                function, raw=True, engine=\"numba\", engine_kwargs={\"parallel\": parallel}\n            )\n            getattr(self.roll, method)(\n                engine=\"numba\", engine_kwargs={\"parallel\": parallel}\n            )\n    \n            self.expand = data.expanding()\n            self.expand.apply(\n                function, raw=True, engine=\"numba\", engine_kwargs={\"parallel\": parallel}\n            )",
+        "min_run_count": 2,
+        "name": "rolling.NumbaEngine.time_expanding_apply",
+        "number": 0,
+        "param_names": [
+            "constructor",
+            "dtype",
+            "function",
+            "method",
+            "parallel",
+            "cols"
+        ],
+        "params": [
+            [
+                "'DataFrame'",
+                "'Series'"
+            ],
+            [
+                "'int'",
+                "'float'"
+            ],
+            [
+                "<function sum>",
+                "<function NumbaEngine.<lambda>>"
+            ],
+            [
+                "'sum'",
+                "'max'",
+                "'min'",
+                "'median'",
+                "'mean'"
+            ],
+            [
+                "True",
+                "False"
+            ],
+            [
+                "None",
+                "100"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "00afe9202c6d7010616e374340431c04f183eee52f552f5baae61025259a46d9",
+        "warmup_time": -1
+    },
+    "rolling.NumbaEngine.time_rolling_apply": {
+        "code": "class NumbaEngine:\n    def time_rolling_apply(self, constructor, dtype, function, method, parallel, col):\n        with warnings.catch_warnings(record=True):\n            self.roll.apply(\n                function, raw=True, engine=\"numba\", engine_kwargs={\"parallel\": parallel}\n            )\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumbaEngine:\n    def setup(self, constructor, dtype, function, method, parallel, cols):\n        N = 10 ** 3\n        shape = (N, cols) if cols is not None and constructor != \"Series\" else N\n        arr = (100 * np.random.random(shape)).astype(dtype)\n        data = getattr(pd, constructor)(arr)\n    \n        # Warm the cache\n        with warnings.catch_warnings(record=True):\n            # Catch parallel=True not being applicable e.g. 1D data\n            self.roll = data.rolling(10)\n            self.roll.apply(\n                function, raw=True, engine=\"numba\", engine_kwargs={\"parallel\": parallel}\n            )\n            getattr(self.roll, method)(\n                engine=\"numba\", engine_kwargs={\"parallel\": parallel}\n            )\n    \n            self.expand = data.expanding()\n            self.expand.apply(\n                function, raw=True, engine=\"numba\", engine_kwargs={\"parallel\": parallel}\n            )",
+        "min_run_count": 2,
+        "name": "rolling.NumbaEngine.time_rolling_apply",
+        "number": 0,
+        "param_names": [
+            "constructor",
+            "dtype",
+            "function",
+            "method",
+            "parallel",
+            "cols"
+        ],
+        "params": [
+            [
+                "'DataFrame'",
+                "'Series'"
+            ],
+            [
+                "'int'",
+                "'float'"
+            ],
+            [
+                "<function sum>",
+                "<function NumbaEngine.<lambda>>"
+            ],
+            [
+                "'sum'",
+                "'max'",
+                "'min'",
+                "'median'",
+                "'mean'"
+            ],
+            [
+                "True",
+                "False"
+            ],
+            [
+                "None",
+                "100"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "752ae4373b6146eeb39f88d0cbcdcf175f3f1f41dc055151e8dbcd685ca9d444",
+        "warmup_time": -1
+    },
+    "rolling.NumbaEngine.time_rolling_methods": {
+        "code": "class NumbaEngine:\n    def time_rolling_methods(self, constructor, dtype, function, method, parallel, col):\n        with warnings.catch_warnings(record=True):\n            getattr(self.roll, method)(\n                engine=\"numba\", engine_kwargs={\"parallel\": parallel}\n            )\n\ndef setup(*args, **kwargs):\n    # This function just needs to be imported into each benchmark file to\n    # set up the random seed before each function.\n    # https://asv.readthedocs.io/en/latest/writing_benchmarks.html\n    np.random.seed(1234)\n\nclass NumbaEngine:\n    def setup(self, constructor, dtype, function, method, parallel, cols):\n        N = 10 ** 3\n        shape = (N, cols) if cols is not None and constructor != \"Series\" else N\n        arr = (100 * np.random.random(shape)).astype(dtype)\n        data = getattr(pd, constructor)(arr)\n    \n        # Warm the cache\n        with warnings.catch_warnings(record=True):\n            # Catch parallel=True not being applicable e.g. 1D data\n            self.roll = data.rolling(10)\n            self.roll.apply(\n                function, raw=True, engine=\"numba\", engine_kwargs={\"parallel\": parallel}\n            )\n            getattr(self.roll, method)(\n                engine=\"numba\", engine_kwargs={\"parallel\": parallel}\n            )\n    \n            self.expand = data.expanding()\n            self.expand.apply(\n                function, raw=True, engine=\"numba\", engine_kwargs={\"parallel\": parallel}\n            )",
+        "min_run_count": 2,
+        "name": "rolling.NumbaEngine.time_rolling_methods",
+        "number": 0,
+        "param_names": [
+            "constructor",
+            "dtype",
+            "function",
+            "method",
+            "parallel",
+            "cols"
+        ],
+        "params": [
+            [
+                "'DataFrame'",
+                "'Series'"
+            ],
+            [
+                "'int'",
+                "'float'"
+            ],
+            [
+                "<function sum>",
+                "<function NumbaEngine.<lambda>>"
+            ],
+            [
+                "'sum'",
+                "'max'",
+                "'min'",
+                "'median'",
+                "'mean'"
+            ],
+            [
+                "True",
+                "False"
+            ],
+            [
+                "None",
+                "100"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 60.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "96f56960f7169abce10831bc5dd9aa6ba82d1436b95b172c2aee7bf38ce0a072",
         "warmup_time": -1
     },
     "rolling.Pairwise.time_groupby": {
@@ -20308,13 +20371,8 @@
             ],
             [
                 "'days'",
-                "'h'",
-                "'s'",
                 "'seconds'",
-                "'ms'",
                 "'microseconds'",
-                "'us'",
-                "'ns'",
                 "'nanoseconds'"
             ]
         ],
